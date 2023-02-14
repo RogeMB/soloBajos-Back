@@ -32,5 +32,9 @@ build/
 ### VS Code ###
 .vscode/
 
-.mv.db
+#H2
+*.mv.db
 *.trace.db
+
+# Mac
+.DS_Store

@@ -1,6 +1,7 @@
 package com.solobajos.solobajos.security.jwt;
 
 import com.solobajos.solobajos.model.User;
+import com.solobajos.solobajos.security.errorhandling.JwtTokenException;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.SignatureException;
 import lombok.extern.java.Log;
@@ -35,6 +36,7 @@ public class JwtProvider {
 
     private JwtParser jwtParser;
 
+    // private int jwtLifeInMinutes;
     private SecretKey secretKey;
 
     @PostConstruct
@@ -51,16 +53,20 @@ public class JwtProvider {
     public String generateToken(Authentication authentication) {
 
         User user = (User) authentication.getPrincipal();
+        return generateToken(user);
 
+    }
+
+    public String generateToken(User user) {
         Date tokenExpirationDateTime =
                 Date.from(
                         LocalDateTime
                                 .now()
                                 .plusDays(jwtLifeInDays)
+                                //.plusMinutes(jwtLifeInMinutes)
                                 .atZone(ZoneId.systemDefault())
                                 .toInstant()
                 );
-
         return Jwts.builder()
                 .setHeaderParam("typ", TOKEN_TYPE)
                 .setSubject(user.getId().toString())
@@ -85,8 +91,9 @@ public class JwtProvider {
             return true;
         } catch (SignatureException | MalformedJwtException | ExpiredJwtException | UnsupportedJwtException | IllegalArgumentException ex) {
             log.info("Error con el token: " + ex.getMessage());
+            throw new JwtTokenException(ex.getMessage());
         }
-        return false;
+        // return false;
     }
 
 }
