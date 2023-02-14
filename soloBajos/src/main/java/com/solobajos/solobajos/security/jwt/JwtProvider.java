@@ -1,16 +1,15 @@
 package com.solobajos.solobajos.security.jwt;
 
 import com.solobajos.solobajos.model.User;
+import io.jsonwebtoken.*;
+import io.jsonwebtoken.security.SignatureException;
 import lombok.extern.java.Log;
 import org.springframework.stereotype.Service;
 
-import io.jsonwebtoken.JwtParser;
-import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.neo4j.Neo4jProperties;
 import org.springframework.security.core.Authentication;
-
 
 import javax.annotation.PostConstruct;
 import javax.crypto.SecretKey;
@@ -18,6 +17,7 @@ import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
+import java.util.UUID;
 
 @Log
 @Service
@@ -68,6 +68,24 @@ public class JwtProvider {
                 .signWith(secretKey)
                 .compact();
 
+    }
+
+    public UUID getUserIdFromJwtToken(String token) {
+        return UUID.fromString(
+                jwtParser.parseClaimsJws(token).getBody().getSubject()
+        );
+    }
+
+
+    public boolean validateToken(String token) {
+
+        try {
+            jwtParser.parseClaimsJws(token);
+            return true;
+        } catch (SignatureException | MalformedJwtException | ExpiredJwtException | UnsupportedJwtException | IllegalArgumentException ex) {
+            log.info("Error con el token: " + ex.getMessage());
+        }
+        return false;
     }
 
 }
