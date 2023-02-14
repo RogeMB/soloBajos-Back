@@ -2,18 +2,26 @@ package com.solobajos.solobajos.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.solobajos.solobajos.model.User;
-import lombok.Builder;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDateTime;
 
 
-@Builder
-public record UserResponse (String id,
-                            String username,
-                            String avatar,
-                            String fullName,
-                            @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy HH:mm:ss")
-                            LocalDateTime createdAt) {
+@SuperBuilder
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class UserResponse {
+
+    protected String id;
+    protected String username;
+    protected String avatar;
+    protected String fullName;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy HH:mm:ss")
+    protected LocalDateTime createdAt;
 
     public static UserResponse fromUser(User user) {
 
