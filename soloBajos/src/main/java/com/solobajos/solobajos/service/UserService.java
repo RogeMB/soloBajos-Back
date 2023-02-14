@@ -87,4 +87,9 @@ public class UserService {
         if (userRepository.existsById(id))
             userRepository.deleteById(id);
     }
+
+    public boolean passwordMatch(User user, String clearPassword) {
+        return passwordEncoder.matches(clearPassword, user.getPassword());
+    }
+
 }
