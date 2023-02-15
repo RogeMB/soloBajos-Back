@@ -48,11 +48,12 @@ public class User implements UserDetails {
     @Column(unique = true, updatable = false)
     private String username;
 
+    private String fullName;
+
+    private String email;
     private String password;
 
     private String avatar;
-
-    private String fullName;
 
     @Builder.Default
     private boolean accountNonExpired = true;
@@ -69,9 +70,11 @@ public class User implements UserDetails {
     @CreatedDate
     private LocalDateTime createdAt;
 
+    //@LastModifiedDate
+    //private LocalDateTime lastModifiedDateAt;
+
     @Builder.Default
     private LocalDateTime lastPasswordChangeAt = LocalDateTime.now();
-
 
 
     @Override

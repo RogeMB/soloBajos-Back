@@ -1,6 +1,8 @@
 package com.solobajos.solobajos.service;
 
 import com.solobajos.solobajos.dto.CreateUserDto;
+import com.solobajos.solobajos.exception.EmptyUserListException;
+import com.solobajos.solobajos.exception.UserNotFoundException;
 import com.solobajos.solobajos.model.User;
 import com.solobajos.solobajos.model.UserRole;
 import com.solobajos.solobajos.repository.UserRepository;
@@ -21,15 +23,15 @@ public class UserService {
     private final UserRepository userRepository;
 
     public User createUser(CreateUserDto createUserDto, EnumSet<UserRole> roles) {
-        User user = User.builder()
-                .username(createUserDto.username())
-                .password(passwordEncoder.encode(createUserDto.password()))
-                .avatar(createUserDto.avatar())
-                .fullName(createUserDto.fullName())
-                .roles(roles)
-                .build();
-
-        return userRepository.save(user);
+        return userRepository.save(
+            User.builder()
+                    .username(createUserDto.username())
+                    .password(passwordEncoder.encode(createUserDto.password()))
+                    .avatar(createUserDto.avatar())
+                    .fullName(createUserDto.fullName())
+                    .roles(roles)
+                    .build()  //email aquí y en el dto
+        );
     }
 
     public User createUserWithUserRole(CreateUserDto createUserRequest) {
@@ -41,11 +43,16 @@ public class UserService {
     }
 
     public List<User> findAll() {
-        return userRepository.findAll();
-    }
+        List<User> users = userRepository.findAll();
 
-    public Optional<User> findById(UUID id) {
-        return userRepository.findById(id);
+        if (users.isEmpty()){
+            throw new EmptyUserListException();
+        }
+        return users;
+    }
+    public User findById(UUID id) {
+        return userRepository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException(id));
     }
 
     public Optional<User> findByUsername(String username) {
@@ -90,6 +97,14 @@ public class UserService {
 
     public boolean passwordMatch(User user, String clearPassword) {
         return passwordEncoder.matches(clearPassword, user.getPassword());
+    }
+
+    public boolean userExists(String username) {
+        return userRepository.existsByUsername(username);
+    }
+
+    public boolean emailExists(String email) {
+        return userRepository.existsByEmail(email);
     }
 
 }

@@ -35,6 +35,7 @@ build/
 #H2
 *.mv.db
 *.trace.db
+db
 
 # Mac
 .DS_Store
