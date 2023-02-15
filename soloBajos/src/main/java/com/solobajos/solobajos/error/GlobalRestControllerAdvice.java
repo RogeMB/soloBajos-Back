@@ -2,9 +2,13 @@ package com.solobajos.solobajos.error;
 
 import com.solobajos.solobajos.error.model.impl.ApiErrorImpl;
 import com.solobajos.solobajos.error.model.impl.ApiValidationSubError;
+import com.solobajos.solobajos.security.errorhandling.JwtTokenException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -44,6 +48,34 @@ public class GlobalRestControllerAdvice extends ResponseEntityExceptionHandler {
         //return super.handleMethodArgumentNotValid(ex, headers, status, request);
         return buildApiErrorWithSubErrors("Validation error. Please check the sublist.", request, status, ex.getAllErrors());
     }
+
+
+    // TokenControllerAdvice
+    @ExceptionHandler({ AuthenticationException.class })
+    public ResponseEntity<?> handleAuthenticationException(AuthenticationException ex, WebRequest request) {
+        return buildApiError(ex.getMessage(), request, HttpStatus.UNAUTHORIZED);
+       /* return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .header("WWW-Authenticate", "Bearer")
+                .body(TokenControllerAdvice.ErrorMessage.of(HttpStatus.UNAUTHORIZED, ex.getMessage(), request));
+       */
+    }
+
+    @ExceptionHandler({ AccessDeniedException.class })
+    public ResponseEntity<?> handleAccessDeniedException(AccessDeniedException ex, WebRequest request) {
+        return buildApiError(ex.getMessage(), request, HttpStatus.FORBIDDEN);
+    }
+
+
+    @ExceptionHandler({JwtTokenException.class})
+    public ResponseEntity<?> handleTokenException(JwtTokenException ex, WebRequest request) {
+        return buildApiError(ex.getMessage(), request, HttpStatus.FORBIDDEN);
+    }
+
+    @ExceptionHandler({UsernameNotFoundException.class})
+    public ResponseEntity<?> handleUserNotExistsException(UsernameNotFoundException ex, WebRequest request) {
+        return buildApiError(ex.getMessage(), request, HttpStatus.UNAUTHORIZED);
+    }
+
 
 
     private final ResponseEntity<Object> buildApiError(String message, WebRequest request, HttpStatus status) {
