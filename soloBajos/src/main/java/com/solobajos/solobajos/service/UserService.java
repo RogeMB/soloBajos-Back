@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Optional;
@@ -69,9 +70,21 @@ public class UserService {
                     u.setAvatar(user.getAvatar());
                     u.setFullName(user.getFullName());
                     return userRepository.save(u);
-                }).or(() -> Optional.empty());
+                }).orElseThrow(() ->new EntityNotFoundException("No user with id")));
 
     }
+    public User editDetails(Long id, EditUserDto editUserDto) {
+
+        return repository.findById(id)
+                .map(user -> {
+                    user.setAvatar(editUserDto.getAvatar());
+                    user.setFullname(editUserDto.getFullname());
+                    return repository.save(user);
+                })
+                .orElseThrow(() ->new EntityNotFoundException("No user with id: " + id));
+    }
+
+
 
     public Optional<User> editPassword(UUID userId, String newPassword) {
 
