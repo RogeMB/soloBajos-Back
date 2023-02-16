@@ -1,11 +1,14 @@
 package com.solobajos.solobajos.model;
 
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.solobajos.solobajos.converter.EnumSetRolesConverter;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.NaturalId;
 import org.springframework.data.annotation.CreatedDate;
 import org.hibernate.annotations.Parameter;
+import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -13,13 +16,14 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-@Entity
+@Entity(name = "User")
 @Table(name="user_entity")
 @NoArgsConstructor
 @AllArgsConstructor
@@ -43,7 +47,6 @@ public class User implements UserDetails {
     )
     @Column(columnDefinition = "uuid")
     private UUID id;
-
     @NaturalId
     @Column(unique = true, updatable = false)
     private String username;
@@ -55,23 +58,31 @@ public class User implements UserDetails {
 
     private String avatar;
 
+    @Column(name = "birth_date")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
+    private LocalDate birthDate;
     @Builder.Default
+    @Column(name = "account_non_expired")
     private boolean accountNonExpired = true;
     @Builder.Default
+    @Column(name = "account_non_locked")
     private boolean accountNonLocked = true;
     @Builder.Default
+    @Column(name = "credentials_non_expired")
     private boolean credentialsNonExpired = true;
     @Builder.Default
     private boolean enabled = true;
-
     @ElementCollection(fetch = FetchType.EAGER)
+    @Convert(converter = EnumSetRolesConverter.class)
     private Set<UserRole> roles;
 
     @CreatedDate
+    @Column(name = "created_at")
     private LocalDateTime createdAt;
 
-    //@LastModifiedDate
-    //private LocalDateTime lastModifiedDateAt;
+    @LastModifiedDate
+    @Column(name = "last_modified_date_at")
+    private LocalDateTime lastModifiedDateAt;
 
     @Builder.Default
     private LocalDateTime lastPasswordChangeAt = LocalDateTime.now();

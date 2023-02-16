@@ -1,6 +1,6 @@
 package com.solobajos.solobajos.search.specification;
 
-import com.solobajos.solobajos.model.Bajo;
+import com.solobajos.solobajos.model.Bass;
 import com.solobajos.solobajos.search.util.SearchCriteria;
 import lombok.AllArgsConstructor;
 import lombok.extern.java.Log;
@@ -18,13 +18,13 @@ import java.util.Arrays;
 
 @Log
 @AllArgsConstructor
-public class BajoSpecification implements Specification<Bajo> {
+public class BassSpecification implements Specification<Bass> {
 
     private SearchCriteria searchCriteria;
 
 
     @Override
-    public Predicate toPredicate(Root<Bajo> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
+    public Predicate toPredicate(Root<Bass> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
 
         if (searchCriteria.getOperator().equalsIgnoreCase(">")){
             return criteriaBuilder.greaterThanOrEqualTo(
