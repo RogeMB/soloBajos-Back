@@ -1,6 +1,7 @@
 package com.solobajos.solobajos.service;
 
 import com.solobajos.solobajos.dto.CreateUserDto;
+import com.solobajos.solobajos.dto.EditUserDto;
 import com.solobajos.solobajos.exception.EmptyUserListException;
 import com.solobajos.solobajos.exception.UserNotFoundException;
 import com.solobajos.solobajos.model.User;
@@ -61,29 +62,31 @@ public class UserService {
     }
 
     public Optional<User> edit(User user) {
-
         // El username no se puede editar
         // La contraseña se edita en otro método
 
-        return userRepository.findById(user.getId())
+        User userfound = userRepository.findById(user.getId())
+                .orElseThrow(()->new EntityNotFoundException("No user found with that id"));
+
+        return userRepository.findById(userfound.getId())
                 .map(u -> {
                     u.setAvatar(user.getAvatar());
                     u.setFullName(user.getFullName());
                     return userRepository.save(u);
-                }).orElseThrow(() ->new EntityNotFoundException("No user with id")));
-
+                });
     }
-    public User editDetails(Long id, EditUserDto editUserDto) {
 
-        return repository.findById(id)
+    // revisar este método
+    public User editDetails(UUID id, EditUserDto editUserDto) {
+
+        return userRepository.findById(id)
                 .map(user -> {
                     user.setAvatar(editUserDto.getAvatar());
-                    user.setFullname(editUserDto.getFullname());
-                    return repository.save(user);
+                    user.setFullName(editUserDto.getFullname());
+                    return userRepository.save(user);
                 })
                 .orElseThrow(() ->new EntityNotFoundException("No user with id: " + id));
     }
-
 
 
     public Optional<User> editPassword(UUID userId, String newPassword) {
