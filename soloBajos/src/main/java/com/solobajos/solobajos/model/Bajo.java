@@ -1,6 +1,7 @@
 package com.solobajos.solobajos.model;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.data.annotation.CreatedDate;
@@ -46,9 +47,13 @@ public class Bajo {
 
     private String supplier;
 
+    @Column(name = "created_at")
     @CreatedDate
     private LocalDateTime createdAt;
 
+    @Column(name = "last_modified_date_at")
     @LastModifiedDate
     private LocalDateTime lastModifiedDateAt;
+    @JsonIgnore
+    public static String hiddenFields = "id,";
 }
