@@ -1,6 +1,7 @@
 package com.solobajos.solobajos.service;
 
 import com.solobajos.solobajos.dto.CreateUserDto;
+import com.solobajos.solobajos.dto.EditUserDto;
 import com.solobajos.solobajos.exception.EmptyUserListException;
 import com.solobajos.solobajos.exception.UserNotFoundException;
 import com.solobajos.solobajos.model.User;
@@ -10,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Optional;
@@ -60,18 +62,32 @@ public class UserService {
     }
 
     public Optional<User> edit(User user) {
-
         // El username no se puede editar
         // La contraseña se edita en otro método
 
-        return userRepository.findById(user.getId())
+        User userfound = userRepository.findById(user.getId())
+                .orElseThrow(()->new EntityNotFoundException("No user found with that id"));
+
+        return userRepository.findById(userfound.getId())
                 .map(u -> {
                     u.setAvatar(user.getAvatar());
                     u.setFullName(user.getFullName());
                     return userRepository.save(u);
-                }).or(() -> Optional.empty());
-
+                });
     }
+
+    // revisar este método
+    public User editDetails(UUID id, EditUserDto editUserDto) {
+
+        return userRepository.findById(id)
+                .map(user -> {
+                    user.setAvatar(editUserDto.getAvatar());
+                    user.setFullName(editUserDto.getFullname());
+                    return userRepository.save(user);
+                })
+                .orElseThrow(() ->new EntityNotFoundException("No user with id: " + id));
+    }
+
 
     public Optional<User> editPassword(UUID userId, String newPassword) {
 
