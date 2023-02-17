@@ -9,15 +9,13 @@ import java.util.List;
 
 @AllArgsConstructor
 public class GenericSpecificationBuilder<T> {
-
     private List<SearchCriteria> params;
     private Class type;
-
-    private String hiddenFields;
-
+    //private String hiddenFields;
     public Specification<T> build() {
-        List<SearchCriteria> checkedParams = params.stream()
-                .filter(p -> QueryableEntity.checkQueryParam(type, p.getKey(), hiddenFields))
+        List<SearchCriteria> checkedParams = params
+                .stream()
+                .filter(p -> !p.getKey().equalsIgnoreCase("id") && QueryableEntity.checkQueryParam(type, p.getKey())) //hiddenFields
                 .toList();
 
         if (checkedParams.isEmpty()) {
@@ -29,7 +27,6 @@ public class GenericSpecificationBuilder<T> {
         for (int i = 1; i < params.size(); i++) {
             result = result.and(new GenericSpecification<T>(params.get(i)));
         }
-
         return result;
     }
 }

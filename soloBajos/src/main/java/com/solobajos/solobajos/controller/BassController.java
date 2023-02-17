@@ -1,16 +1,5 @@
 package com.solobajos.solobajos.controller;
 
-import com.solobajos.solobajos.search.util.SearchCriteria;
-import com.solobajos.solobajos.search.util.SearchCriteriaExtractor;
-import lombok.RequiredArgsConstructor;
-import org.springframework.data.web.PageableDefault;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
-import java.awt.print.Pageable;
-import java.util.List;
 /*
 @RestController
 @RequestMapping("/bajo/")
