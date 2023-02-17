@@ -18,9 +18,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Collection;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Entity(name = "User")
@@ -72,7 +70,7 @@ public class User implements UserDetails {
     private boolean credentialsNonExpired = true;
     @Builder.Default
     private boolean enabled = true;
-    @ElementCollection(fetch = FetchType.EAGER)
+   // @ElementCollection(fetch = FetchType.EAGER)
     @Convert(converter = EnumSetRolesConverter.class)
     private Set<UserRole> roles;
 
@@ -86,6 +84,16 @@ public class User implements UserDetails {
 
     @Builder.Default
     private LocalDateTime lastPasswordChangeAt = LocalDateTime.now();
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(joinColumns = @JoinColumn(name = "user_id",
+            foreignKey = @ForeignKey(name="FK_BASS_USER")),
+            inverseJoinColumns = @JoinColumn(name = "bass_id",
+                    foreignKey = @ForeignKey(name="FK_USER_BASS")),
+            name = "bajos"
+    )
+    private List<Bass> bassList = new ArrayList<>();
+
 
 
     @Override

@@ -4,7 +4,7 @@ package com.solobajos.solobajos.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.solobajos.solobajos.converter.EnumSetRolesConverter;
 import com.solobajos.solobajos.converter.EnumSetStateConverter;
-import com.solobajos.solobajos.converter.YearType;
+import com.solobajos.solobajos.converter.YearAttributeConverter;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.TypeDef;
@@ -15,6 +15,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.time.Year;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -26,7 +27,6 @@ import java.util.UUID;
 @Setter
 @Getter
 @EntityListeners(AuditingEntityListener.class)
-@TypeDef(typeClass = YearType.class, defaultForType = Year.class)
 public class Bass {
 
     @Id
@@ -58,6 +58,7 @@ public class Bass {
             name = "built_year",
             columnDefinition = "smallint"
     )
+    @Convert(converter = YearAttributeConverter.class)
     private Year builtYear;
 
     private String discount;
@@ -67,7 +68,7 @@ public class Bass {
     @Column(name = "is_available")
     private Boolean isAvailable;
 
-    @ElementCollection(fetch = FetchType.EAGER)
+   // @ElementCollection(fetch = FetchType.EAGER)
     @Convert(converter = EnumSetStateConverter.class)
     private Set<BassState> state;
 
@@ -87,6 +88,9 @@ public class Bass {
             foreignKey = @ForeignKey(name = "FK_BASS_CATEGORIA"))
     private Categoria categoria;
 
+
+    @ManyToMany(mappedBy = "bassList", fetch = FetchType.LAZY)
+    private List<User> userList;
 
     // Helper de la asociación con Categoria
     public void addToCategoria(Categoria c) {

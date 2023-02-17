@@ -2282,14 +2282,6 @@
 					]
 				},
 				{
-					"_type": "UMLClass",
-					"_id": "AAAAAAGGWa+vNLZOnqI=",
-					"_parent": {
-						"$ref": "AAAAAAFF+qBWK6M3Z8Y="
-					},
-					"name": "Class1"
-				},
-				{
 					"_type": "UMLEnumeration",
 					"_id": "AAAAAAGGWa/Ig7azPew=",
 					"_parent": {
