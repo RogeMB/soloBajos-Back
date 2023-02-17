@@ -72,7 +72,7 @@ public class User implements UserDetails {
     private boolean enabled = true;
    // @ElementCollection(fetch = FetchType.EAGER)
     @Convert(converter = EnumSetRolesConverter.class)
-    private Set<UserRole> roles;
+    private EnumSet<UserRole> roles;
 
     @CreatedDate
     @Column(name = "created_at")
@@ -83,14 +83,15 @@ public class User implements UserDetails {
     private LocalDateTime lastModifiedDateAt;
 
     @Builder.Default
+    @Column(name = "last_password_change_at")
     private LocalDateTime lastPasswordChangeAt = LocalDateTime.now();
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(joinColumns = @JoinColumn(name = "user_id",
-            foreignKey = @ForeignKey(name="FK_BASS_USER")),
+            foreignKey = @ForeignKey(name="FK_BASS_USER_ENTITY_USER")),
             inverseJoinColumns = @JoinColumn(name = "bass_id",
-                    foreignKey = @ForeignKey(name="FK_USER_BASS")),
-            name = "bajos"
+                    foreignKey = @ForeignKey(name="FK_BASS_USER_ENTITY_BASS")),
+            name = "BASS_USER_ENTITY"
     )
     private List<Bass> bassList = new ArrayList<>();
 

@@ -1,13 +1,8 @@
 package com.solobajos.solobajos.model;
 
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.solobajos.solobajos.converter.EnumSetRolesConverter;
-import com.solobajos.solobajos.converter.EnumSetStateConverter;
 import com.solobajos.solobajos.converter.YearAttributeConverter;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.TypeDef;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -16,7 +11,6 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.time.Year;
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 
 @Entity(name="Bass")
@@ -61,16 +55,21 @@ public class Bass {
     @Convert(converter = YearAttributeConverter.class)
     private Year builtYear;
 
-    private String discount;
-
     private double price;
+
+    private String discount;
 
     @Column(name = "is_available")
     private Boolean isAvailable;
 
-   // @ElementCollection(fetch = FetchType.EAGER)
+   //@ElementCollection(fetch = FetchType.EAGER)
+    /*
     @Convert(converter = EnumSetStateConverter.class)
-    private Set<BassState> state;
+    private EnumSet<BassState> state;
+    */
+
+    @Enumerated(EnumType.STRING)
+    private BassState state;
 
     @Column(name = "created_at")
     @CreatedDate
@@ -79,8 +78,9 @@ public class Bass {
     @Column(name = "last_modified_date_at")
     @LastModifiedDate
     private LocalDateTime lastModifiedDateAt;
-    @JsonIgnore
-    public static String hiddenFields = "id,";
+
+    // @JsonIgnore
+    // public static String hiddenFields = "id,";
 
 
     @ManyToOne

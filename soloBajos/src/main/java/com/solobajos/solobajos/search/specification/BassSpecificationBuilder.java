@@ -7,6 +7,6 @@ import java.util.List;
 
 public class BassSpecificationBuilder extends GenericSpecificationBuilder<Bass>{
     public BassSpecificationBuilder(List<SearchCriteria> params) {
-        super(params, Bass.class, Bass.hiddenFields);
+        super(params, Bass.class); //Bass.hiddenFields
     }
 }

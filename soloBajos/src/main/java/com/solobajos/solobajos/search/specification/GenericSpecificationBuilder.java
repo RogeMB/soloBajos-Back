@@ -11,10 +11,11 @@ import java.util.List;
 public class GenericSpecificationBuilder<T> {
     private List<SearchCriteria> params;
     private Class type;
-    private String hiddenFields;
+    //private String hiddenFields;
     public Specification<T> build() {
-        List<SearchCriteria> checkedParams = params.stream()
-                .filter(p -> QueryableEntity.checkQueryParam(type, p.getKey(), hiddenFields))
+        List<SearchCriteria> checkedParams = params
+                .stream()
+                .filter(p -> !p.getKey().equalsIgnoreCase("id") && QueryableEntity.checkQueryParam(type, p.getKey())) //hiddenFields
                 .toList();
 
         if (checkedParams.isEmpty()) {
