@@ -2,16 +2,24 @@ package com.solobajos.solobajos.service;
 
 import com.solobajos.solobajos.dto.CreateUserDto;
 import com.solobajos.solobajos.dto.EditUserDto;
+import com.solobajos.solobajos.dto.PageDto;
+import com.solobajos.solobajos.dto.UserResponse;
 import com.solobajos.solobajos.exception.EmptyUserListException;
 import com.solobajos.solobajos.exception.UserNotFoundException;
 import com.solobajos.solobajos.model.User;
 import com.solobajos.solobajos.model.UserRole;
 import com.solobajos.solobajos.repository.UserRepository;
+import com.solobajos.solobajos.search.specification.UserSpecificationBuilder;
+import com.solobajos.solobajos.search.util.SearchCriteria;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
+
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Optional;
@@ -44,6 +52,19 @@ public class UserService {
         return createUser(createUserDto, EnumSet.of(UserRole.ADMIN));
     }
 
+    public PageDto<UserResponse> findAllSearch(List<SearchCriteria> params, Pageable pageable){
+        UserSpecificationBuilder userSpecificationBuilderBuilder = new UserSpecificationBuilder(params);
+
+        Specification<User> spec = userSpecificationBuilderBuilder.build();
+        Page<UserResponse> pageProductDto = userRepository.findAll(spec, pageable).map(UserResponse::fromUser);
+
+        if(pageProductDto.isEmpty())
+            throw new EmptyUserListException();
+
+        return new PageDto<>(pageProductDto);
+    }
+
+    /*
     public List<User> findAll() {
         List<User> users = userRepository.findAll();
 
@@ -52,6 +73,8 @@ public class UserService {
         }
         return users;
     }
+    */
+
     public User findById(UUID id) {
         return userRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException(id));
@@ -122,5 +145,6 @@ public class UserService {
     public boolean emailExists(String email) {
         return userRepository.existsByEmail(email);
     }
+
 
 }

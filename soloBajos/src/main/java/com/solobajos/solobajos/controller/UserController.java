@@ -4,6 +4,9 @@ import com.solobajos.solobajos.dto.*;
 import com.solobajos.solobajos.model.User;
 import com.solobajos.solobajos.security.jwt.JwtProvider;
 import com.solobajos.solobajos.service.UserService;
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
+import io.swagger.v3.oas.annotations.info.Info;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,17 +15,34 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
+//@RequestMapping("/user")
+@OpenAPIDefinition(info = @Info(title ="Solo-Bajos API"))
+@Tag(name = "User", description = "Esta clase implementa Restcontrollers para la entidad user")
 public class UserController {
     private final UserService userService;
     private final AuthenticationManager authManager;
     private final JwtProvider jwtProvider;
+
+
+
+
+
+    @GetMapping("/auth/{id}")
+    public UserResponse getById(@PathVariable UUID id) {
+        return UserResponse.fromUser(userService.findById(id));
+    }
 
     @PostMapping("/auth/register")
     public ResponseEntity<UserResponse> createUserWithUserRole(@RequestBody CreateUserDto createUserDto) {
@@ -89,5 +109,10 @@ public class UserController {
         return null;
     }
 
+    @DeleteMapping("/auth/{id}")
+    public ResponseEntity<?> delete(@PathVariable UUID id) {
+        userService.deleteById(id);
+        return ResponseEntity.noContent().build();
+    }
 
 }
