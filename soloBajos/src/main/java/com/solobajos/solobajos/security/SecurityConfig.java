@@ -78,8 +78,10 @@ public class SecurityConfig {
                     .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                     .authorizeRequests()
-                    .antMatchers("/note/**").hasRole("USER")
+                    .antMatchers("/user/**").hasRole("USER")
                     .antMatchers("/auth/register/admin").hasRole("ADMIN")
+                    .antMatchers("/admin/**").hasRole("ADMIN")
+                    .antMatchers("/categoria/**").hasAnyRole("USER", "ADMIN")
                     .anyRequest().authenticated();
 
         //http.addFilterBefore(null, UsernamePasswordAuthenticationFilter.class);
@@ -92,6 +94,6 @@ public class SecurityConfig {
 
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
-        return (web -> web.ignoring().antMatchers("/h2-console/**", "/auth/register", "/auth/login"));
+        return (web -> web.ignoring().antMatchers("/h2-console/**", "/auth/register", "/auth/login", "/v3/api-docs/**", "/swagger-ui-solobajosdocs.html", "/swagger-ui/**", "/api-docs/**"));
     }
 }

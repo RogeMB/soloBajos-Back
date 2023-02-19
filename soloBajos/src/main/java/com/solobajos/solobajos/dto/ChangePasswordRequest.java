@@ -9,6 +9,3 @@ public record ChangePasswordRequest (@NotEmpty(message = "{userDto.password.note
                                      @NotEmpty(message = "{userDto.password.notempty}") String newPassword,
                                      @NotEmpty(message = "{userDto.password.notempty}")String verifyNewPassword) {
 }
-
-
-// probar si funciona con record

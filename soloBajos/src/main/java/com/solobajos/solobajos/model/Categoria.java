@@ -37,6 +37,8 @@ public class Categoria {
 
     private String name;
 
+    private String image;
+
     @Builder.Default
     @OneToMany(mappedBy = "categoria", fetch = FetchType.LAZY)
     private List<Bass> bassList = new ArrayList<>();
@@ -44,5 +46,6 @@ public class Categoria {
     @PreRemove
     public void preDeleteCategoria (){
         bassList.forEach(bajo -> bajo.setCategoria(null));
+        setBassList(new ArrayList<>());
     }
 }

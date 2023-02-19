@@ -21,13 +21,14 @@ import org.springframework.web.server.ResponseStatusException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.lang.annotation.Documented;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
-//@RequestMapping("/user")
+@RequestMapping("/user/")
 @OpenAPIDefinition(info = @Info(title ="Solo-Bajos API"))
 @Tag(name = "User", description = "Esta clase implementa Restcontrollers para la entidad user")
 public class UserController {
@@ -36,57 +37,7 @@ public class UserController {
     private final JwtProvider jwtProvider;
 
 
-
-
-
-    @GetMapping("/auth/{id}")
-    public UserResponse getById(@PathVariable UUID id) {
-        return UserResponse.fromUser(userService.findById(id));
-    }
-
-    @PostMapping("/auth/register")
-    public ResponseEntity<UserResponse> createUserWithUserRole(@RequestBody CreateUserDto createUserDto) {
-        User user = userService.createUserWithUserRole(createUserDto);
-
-        return ResponseEntity.status(HttpStatus.CREATED).body(UserResponse.fromUser(user));
-    }
-
-    // Más adelante podemos manejar la seguridad de acceso a esta petición
-
-    @PostMapping("/auth/register/admin")
-    public ResponseEntity<UserResponse> createUserWithAdminRole(@RequestBody CreateUserDto createUserDto) {
-        User user = userService.createUserWithAdminRole(createUserDto);
-
-        return ResponseEntity.status(HttpStatus.CREATED).body(UserResponse.fromUser(user));
-    }
-
-    @PostMapping("/auth/login")
-    public ResponseEntity<JwtUserResponse> login(@RequestBody LoginRequest loginRequest) {
-
-        // Realizamos la autenticación
-
-        Authentication authentication =
-                authManager.authenticate(
-                        new UsernamePasswordAuthenticationToken(
-                                loginRequest.username(),
-                                loginRequest.password()
-                        )
-                );
-
-        // Una vez realizada, la guardamos en el contexto de seguridad
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-
-        // Devolvemos una respuesta adecuada
-        String token = jwtProvider.generateToken(authentication);
-
-        User user = (User) authentication.getPrincipal();
-
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(JwtUserResponse.of(user, token));
-
-    }
-
-    @PutMapping("/user/changePassword")
+    @PutMapping("/changePassword")
     public ResponseEntity<UserResponse> changePassword(@RequestBody ChangePasswordRequest changePasswordRequest,
                                                        @AuthenticationPrincipal User loggedUser) {
         // Este código es mejorable.
@@ -107,12 +58,6 @@ public class UserController {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Password Data Error");
         }
         return null;
-    }
-
-    @DeleteMapping("/auth/{id}")
-    public ResponseEntity<?> delete(@PathVariable UUID id) {
-        userService.deleteById(id);
-        return ResponseEntity.noContent().build();
     }
 
 }

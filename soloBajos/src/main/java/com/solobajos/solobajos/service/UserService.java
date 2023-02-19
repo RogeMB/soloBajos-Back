@@ -56,12 +56,12 @@ public class UserService {
         UserSpecificationBuilder userSpecificationBuilderBuilder = new UserSpecificationBuilder(params);
 
         Specification<User> spec = userSpecificationBuilderBuilder.build();
-        Page<UserResponse> pageProductDto = userRepository.findAll(spec, pageable).map(UserResponse::fromUser);
+        Page<UserResponse> pageUserDto = userRepository.findAll(spec, pageable).map(UserResponse::fromUser);
 
-        if(pageProductDto.isEmpty())
+        if(pageUserDto.isEmpty())
             throw new EmptyUserListException();
 
-        return new PageDto<>(pageProductDto);
+        return new PageDto<>(pageUserDto);
     }
 
     /*
