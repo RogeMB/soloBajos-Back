@@ -31,7 +31,7 @@ public class BassController {
 
     private final BassService bassService;
 
-    @GetMapping("/basses")
+    @GetMapping("/bass")
     public PageDto<BassResponse> getAllBasses(
             @RequestParam(value = "search", defaultValue = "") String search,
             @PageableDefault(size = 10, page = 0) Pageable pageable){

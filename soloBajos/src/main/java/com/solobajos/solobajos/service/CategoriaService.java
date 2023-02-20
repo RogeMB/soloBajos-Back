@@ -1,19 +1,13 @@
 package com.solobajos.solobajos.service;
 
-import com.solobajos.solobajos.dto.CategoriaResponse;
 import com.solobajos.solobajos.dto.CreateCategoriaDto;
 import com.solobajos.solobajos.dto.EditCategoriaDto;
-import com.solobajos.solobajos.dto.PageDto;
 import com.solobajos.solobajos.exception.CategoriaNotFoundException;
 import com.solobajos.solobajos.exception.EmptyCategoriaListException;
 import com.solobajos.solobajos.model.Categoria;
 import com.solobajos.solobajos.repository.CategoriaRepository;
-import com.solobajos.solobajos.search.specification.CategoriaSpecificationBuilder;
-import com.solobajos.solobajos.search.util.SearchCriteria;
+
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -28,7 +22,7 @@ public class CategoriaService {
     private final CategoriaRepository categoriaRepository;
     private final StorageService storageService;
 
-    public PageDto<CategoriaResponse> findAllSearch(List<SearchCriteria> params, Pageable pageable){
+   /* public PageDto<CategoriaResponse> findAllSearch(List<SearchCriteria> params, Pageable pageable){
         CategoriaSpecificationBuilder categoriaSpecificationBuilderBuilder = new CategoriaSpecificationBuilder(params);
 
         Specification<Categoria> spec = categoriaSpecificationBuilderBuilder.build();
@@ -38,8 +32,7 @@ public class CategoriaService {
             throw new EmptyCategoriaListException();
 
         return new PageDto<>(pageCategoriaDto);
-    }
-    // modificar por findall normal
+    }*/
 
     public List<Categoria> findAll() {
         List<Categoria> categorias = categoriaRepository.findAll();

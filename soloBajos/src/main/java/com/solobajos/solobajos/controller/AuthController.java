@@ -15,17 +15,22 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
+import javax.validation.Valid;
+import java.net.URI;
+
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/auth/")
 @OpenAPIDefinition(info = @Info(title ="Solo-Bajos API"))
 @Tag(name = "Auth", description = "Esta clase implementa Restcontrollers para la autenticacion")
 public class AuthController {
@@ -33,24 +38,32 @@ public class AuthController {
     private final AuthenticationManager authManager;
     private final JwtProvider jwtProvider;
 
-    @PostMapping("/register")
-    public ResponseEntity<UserResponse> createUserWithUserRole(@RequestBody CreateUserDto createUserDto) {
+    @PostMapping("/auth/register")
+    public ResponseEntity<UserResponse> createUserWithUserRole(@Valid @RequestBody CreateUserDto createUserDto) {
         User user = userService.createUserWithUserRole(createUserDto);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(UserResponse.fromUser(user));
+        URI createdURI = ServletUriComponentsBuilder
+                .fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(user.getId()).toUri();
+
+        return ResponseEntity.created(createdURI).body(UserResponse.fromUser(user));
     }
 
-    @PostMapping("/register/admin")
-    public ResponseEntity<UserResponse> createUserWithAdminRole(@RequestBody CreateUserDto createUserDto) {
+    @PostMapping("/admin/auth/register")
+    public ResponseEntity<UserResponse> createUserWithAdminRole(@Valid @RequestBody CreateUserDto createUserDto) {
         User user = userService.createUserWithAdminRole(createUserDto);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(UserResponse.fromUser(user));
+        URI createdURI = ServletUriComponentsBuilder
+                .fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(user.getId()).toUri();
+
+        return ResponseEntity.created(createdURI).body(UserResponse.fromUser(user));
     }
 
-    @PostMapping("/login")
+    @PostMapping("/auth/login")
     public ResponseEntity<JwtUserResponse> login(@RequestBody LoginRequest loginRequest) {
-
-        // Realizamos la autenticación
 
         Authentication authentication =
                 authManager.authenticate(
@@ -60,17 +73,18 @@ public class AuthController {
                         )
                 );
 
-        // Una vez realizada, la guardamos en el contexto de seguridad
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        // Devolvemos una respuesta adecuada
         String token = jwtProvider.generateToken(authentication);
 
         User user = (User) authentication.getPrincipal();
 
+        if (!user.isEnabled()){
+            throw new DisabledException("This user is banned");
+        }
+
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(JwtUserResponse.of(user, token));
-
     }
 
 

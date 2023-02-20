@@ -1,6 +1,5 @@
 package com.solobajos.solobajos.dto;
 
-import com.solobajos.solobajos.validation.annotation.FieldsValueMatch;
 import lombok.Builder;
 
 import javax.validation.constraints.NotBlank;

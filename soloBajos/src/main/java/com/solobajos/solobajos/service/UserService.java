@@ -1,10 +1,8 @@
 package com.solobajos.solobajos.service;
 
-import com.solobajos.solobajos.dto.CreateUserDto;
-import com.solobajos.solobajos.dto.EditUserDto;
-import com.solobajos.solobajos.dto.PageDto;
-import com.solobajos.solobajos.dto.UserResponse;
+import com.solobajos.solobajos.dto.*;
 import com.solobajos.solobajos.exception.EmptyUserListException;
+import com.solobajos.solobajos.exception.PasswordNotMathException;
 import com.solobajos.solobajos.exception.UserNotFoundException;
 import com.solobajos.solobajos.model.User;
 import com.solobajos.solobajos.model.UserRole;
@@ -17,6 +15,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.EntityNotFoundException;
 
@@ -28,19 +27,18 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 public class UserService {
-
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
-
+    private final StorageService storageService;
     public User createUser(CreateUserDto createUserDto, EnumSet<UserRole> roles) {
         return userRepository.save(
             User.builder()
                     .username(createUserDto.username())
-                    .password(passwordEncoder.encode(createUserDto.password()))
-                    .avatar(createUserDto.avatar())
                     .fullName(createUserDto.fullName())
+                    .email(createUserDto.email())
+                    .password(passwordEncoder.encode(createUserDto.password()))
                     .roles(roles)
-                    .build()  //email aquí y en el dto
+                    .build()
         );
     }
 
@@ -83,11 +81,8 @@ public class UserService {
     public Optional<User> findByUsername(String username) {
         return userRepository.findFirstByUsername(username);
     }
-
+    /*
     public Optional<User> edit(User user) {
-        // El username no se puede editar
-        // La contraseña se edita en otro método
-
         User userfound = userRepository.findById(user.getId())
                 .orElseThrow(()->new EntityNotFoundException("No user found with that id"));
 
@@ -98,31 +93,29 @@ public class UserService {
                     return userRepository.save(u);
                 });
     }
+    */
 
-    // revisar este método
-    public User editDetails(UUID id, EditUserDto editUserDto) {
+    public User editDetails(UUID id, EditUserDto editUserDto, MultipartFile file) {
+        String filename = storageService.store(file);
 
         return userRepository.findById(id)
                 .map(user -> {
-                    user.setAvatar(editUserDto.getAvatar());
-                    user.setFullName(editUserDto.getFullname());
+                    user.setAvatar(filename);
+                    user.setFullName(editUserDto.getFullName());
                     return userRepository.save(user);
                 })
                 .orElseThrow(() ->new EntityNotFoundException("No user with id: " + id));
     }
 
 
-    public Optional<User> editPassword(UUID userId, String newPassword) {
-
-        // Aquí no se realizan comprobaciones de seguridad. Tan solo se modifica
-
-        return userRepository.findById(userId)
-                .map(u -> {
-                    u.setPassword(passwordEncoder.encode(newPassword));
-                    return userRepository.save(u);
-                }).or(Optional::empty);
-
+    public User editPassword(User user, ChangePasswordRequest changePasswordRequest) throws PasswordNotMathException {
+        if(this.passwordMatch(user, changePasswordRequest.oldPassword())){
+                user.setPassword(passwordEncoder.encode(changePasswordRequest.newPassword()));
+                return userRepository.save(user);
+            }
+        throw new PasswordNotMathException();
     }
+
 
     public void delete(User user) {
         deleteById(user.getId());

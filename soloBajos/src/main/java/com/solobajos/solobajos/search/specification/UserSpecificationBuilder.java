@@ -1,6 +1,5 @@
 package com.solobajos.solobajos.search.specification;
 
-import com.solobajos.solobajos.model.Bass;
 import com.solobajos.solobajos.model.User;
 import com.solobajos.solobajos.search.util.SearchCriteria;
 

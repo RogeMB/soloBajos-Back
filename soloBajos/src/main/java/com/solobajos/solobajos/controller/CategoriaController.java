@@ -3,15 +3,11 @@ package com.solobajos.solobajos.controller;
 
 import com.solobajos.solobajos.dto.*;
 import com.solobajos.solobajos.model.Categoria;
-import com.solobajos.solobajos.search.util.SearchCriteria;
-import com.solobajos.solobajos.search.util.SearchCriteriaExtractor;
 import com.solobajos.solobajos.service.CategoriaService;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.info.Info;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -28,16 +24,13 @@ import java.util.UUID;
 @Tag(name = "Categoria", description = "Esta clase implementa Restcontrollers para la entidad Categoria")
 public class CategoriaController {
 
-    private CategoriaService categoriaService;
+    private final CategoriaService categoriaService;
 
     @GetMapping("/categoria")
-    public PageDto<CategoriaResponse> getAllCategoria(
-            @RequestParam(value = "search", defaultValue = "") String search,
-            @PageableDefault(size = 10, page = 0) Pageable pageable){
-
-        List<SearchCriteria> params = SearchCriteriaExtractor.extractSearchCriteriaList(search);
-        return categoriaService.findAllSearch(params, pageable);
+    public List<CategoriaResponse> getAllCategorias() {
+        return categoriaService.findAll().stream().map(CategoriaResponse::fromCategoria).toList();
     }
+
 
     @GetMapping("/categoria/{id}")
     public CategoriaResponse getById(@PathVariable UUID id) {

@@ -1,7 +1,6 @@
 package com.solobajos.solobajos.dto;
 
 import com.solobajos.solobajos.model.BassState;
-import com.solobajos.solobajos.model.Categoria;
 import lombok.Builder;
 
 import javax.validation.constraints.NotBlank;
