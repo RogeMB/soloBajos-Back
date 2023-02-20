@@ -47,14 +47,15 @@ public class UserController {
     }
 
     @PutMapping("/user/edit")
-    public UserResponse editDetails( @AuthenticationPrincipal User loggedUser, @Valid @RequestPart EditUserDto editUserDto, @RequestPart MultipartFile file) {
+    public UserResponse editDetails(@AuthenticationPrincipal User loggedUser,
+                                    @Valid @RequestPart EditUserDto editUserDto, @RequestPart MultipartFile file) {
         User edited = userService.editDetails(loggedUser, editUserDto, file);
         return UserResponse.fromUser(edited);
     }
 
     @PutMapping("/user/changePassword")
     public UserResponse changePassword(@Valid @RequestBody ChangePasswordRequest changePasswordRequest,
-                                                       @AuthenticationPrincipal User loggedUser) throws PasswordNotMathException {
+                                       @AuthenticationPrincipal User loggedUser) throws PasswordNotMathException {
 
         User modified = userService.editPassword(loggedUser, changePasswordRequest);
         return (UserResponse.fromUser(modified));
