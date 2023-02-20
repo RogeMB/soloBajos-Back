@@ -16,30 +16,30 @@ import java.util.UUID;
 @AllArgsConstructor
 @Builder
 public class EditBassDto {
-    @NotEmpty(message = "{BassDto.brand.notempty}")
-    @NotBlank(message = "{BassDto.brand.notempty}")
+    @NotEmpty(message = "{createBassDto.brand.notempty}")
+    @NotBlank(message = "{createBassDto.brand.notempty}")
     private String brand;
-    @NotEmpty(message = "{BassDto.model.notempty}")
-    @NotBlank(message = "{BassDto.model.notempty}")
+    @NotEmpty(message = "{createBassDto.model.notempty}")
+    @NotBlank(message = "{createBassDto.model.notempty}")
     private String model;
-    @NotEmpty(message = "{BassDto.frets.notempty}")
-    @NotBlank(message = "{BassDto.frets.notempty}")
+    @NotEmpty(message = "{createBassDto.frets.notempty}")
+    @NotBlank(message = "{createBassDto.frets.notempty}")
     private int frets;
-    @NotEmpty(message = "{BassDto.origin.notempty}")
-    @NotBlank(message = "{BassDto.origin.notempty}")
+    @NotEmpty(message = "{createBassDto.origin.notempty}")
+    @NotBlank(message = "{createBassDto.origin.notempty}")
     private String origin;
-    @NotEmpty(message = "{BassDto.year.notempty}")
-    @NotBlank(message = "{BassDto.year.notempty}")
+    @NotEmpty(message = "{createBassDto.year.notempty}")
+    @NotBlank(message = "{createBassDto.year.notempty}")
     private Year builtYear;
-    @NotEmpty(message = "{BassDto.price.notempty}")
-    @NotBlank(message = "{BassDto.price.notempty}")
+    @NotEmpty(message = "{createBassDto.price.notempty}")
+    @NotBlank(message = "{createBassDto.price.notempty}")
     private double price;
     private double discount;
     private Boolean isAvailable;
-    @NotEmpty(message = "{BassDto.state.notempty}")
-    @NotBlank(message = "{BassDto.state.notempty}")
+    @NotEmpty(message = "{createBassDto.state.notempty}")
+    @NotBlank(message = "{createBassDto.state.notempty}")
     private BassState state;
-    @NotEmpty(message = "{BassDto.state.notempty}")
-    @NotBlank(message = "{BassDto.state.notempty}")
+    @NotEmpty(message = "{createBassDto.state.notempty}")
+    @NotBlank(message = "{createBassDto.state.notempty}")
     private UUID categoria_id;
 }

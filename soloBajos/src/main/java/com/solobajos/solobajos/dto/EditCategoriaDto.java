@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 
 @Data
@@ -12,7 +13,8 @@ import javax.validation.constraints.NotEmpty;
 @AllArgsConstructor
 @Builder
 public class EditCategoriaDto {
-    @NotEmpty(message = "{categoriaDto.name.notempty}")
+    @NotEmpty(message = "{createCategoriaDto.name.notempty}")
+    @NotBlank(message = "{createCategoriaDto.name.notblank}")
     private String name;
 
 }

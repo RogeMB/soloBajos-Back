@@ -41,6 +41,16 @@ public class CategoriaService {
     }
     // modificar por findall normal
 
+    public List<Categoria> findAll() {
+        List<Categoria> categorias = categoriaRepository.findAll();
+
+        if (categorias.isEmpty()){
+            throw new EmptyCategoriaListException();
+        }
+        return categorias;
+    }
+
+
     public Categoria findById(UUID id) {
         return categoriaRepository.findById(id)
                 .orElseThrow(() -> new CategoriaNotFoundException(id));
