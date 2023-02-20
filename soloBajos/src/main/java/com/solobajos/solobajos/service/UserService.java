@@ -62,16 +62,6 @@ public class UserService {
         return new PageDto<>(pageUserDto);
     }
 
-    /*
-    public List<User> findAll() {
-        List<User> users = userRepository.findAll();
-
-        if (users.isEmpty()){
-            throw new EmptyUserListException();
-        }
-        return users;
-    }
-    */
 
     public User findById(UUID id) {
         return userRepository.findById(id)
@@ -81,30 +71,12 @@ public class UserService {
     public Optional<User> findByUsername(String username) {
         return userRepository.findFirstByUsername(username);
     }
-    /*
-    public Optional<User> edit(User user) {
-        User userfound = userRepository.findById(user.getId())
-                .orElseThrow(()->new EntityNotFoundException("No user found with that id"));
 
-        return userRepository.findById(userfound.getId())
-                .map(u -> {
-                    u.setAvatar(user.getAvatar());
-                    u.setFullName(user.getFullName());
-                    return userRepository.save(u);
-                });
-    }
-    */
-
-    public User editDetails(UUID id, EditUserDto editUserDto, MultipartFile file) {
+    public User editDetails(User user, EditUserDto editUserDto, MultipartFile file) {
         String filename = storageService.store(file);
-
-        return userRepository.findById(id)
-                .map(user -> {
-                    user.setAvatar(filename);
-                    user.setFullName(editUserDto.getFullName());
-                    return userRepository.save(user);
-                })
-                .orElseThrow(() ->new EntityNotFoundException("No user with id: " + id));
+        user.setFullName(editUserDto.getFullName());
+        user.setAvatar(filename);
+        return userRepository.save(user);
     }
 
 
@@ -116,13 +88,7 @@ public class UserService {
         throw new PasswordNotMathException();
     }
 
-
-    public void delete(User user) {
-        deleteById(user.getId());
-    }
-
     public void deleteById(UUID id) {
-        // Prevenimos errores al intentar borrar algo que no existe
         if (userRepository.existsById(id))
             userRepository.deleteById(id);
     }

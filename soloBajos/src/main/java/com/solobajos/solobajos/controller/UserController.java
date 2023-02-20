@@ -46,9 +46,9 @@ public class UserController {
         return UserResponse.fromUser(userService.findById(id));
     }
 
-    @PutMapping("/details/{id}")
-    public UserResponse editDetails(@PathVariable UUID id, @Valid @RequestPart EditUserDto editUserDto, @RequestPart MultipartFile file) {
-        User edited = userService.editDetails(id, editUserDto, file);
+    @PutMapping("/user/edit")
+    public UserResponse editDetails( @AuthenticationPrincipal User loggedUser, @Valid @RequestPart EditUserDto editUserDto, @RequestPart MultipartFile file) {
+        User edited = userService.editDetails(loggedUser, editUserDto, file);
         return UserResponse.fromUser(edited);
     }
 
@@ -58,11 +58,6 @@ public class UserController {
 
         User modified = userService.editPassword(loggedUser, changePasswordRequest);
         return (UserResponse.fromUser(modified));
-
-      /* } catch (RuntimeException ex) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Password Data Error");
-        }
-        return null;*/
     }
 
     @DeleteMapping("/admin/user/{id}")
