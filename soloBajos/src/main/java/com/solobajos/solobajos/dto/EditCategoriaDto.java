@@ -12,9 +12,9 @@ import javax.validation.constraints.NotEmpty;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class EditUserDto {
+public class EditCategoriaDto {
+    @NotEmpty(message = "{createCategoriaDto.name.notempty}")
+    @NotBlank(message = "{createCategoriaDto.name.notblank}")
+    private String name;
 
-    @NotEmpty(message = "{createUserDto.fullname.notempty}")
-    @NotBlank(message = "{createUserDto.fullname.notblank}")
-    String fullName;
 }

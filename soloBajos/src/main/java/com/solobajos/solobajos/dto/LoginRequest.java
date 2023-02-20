@@ -1,5 +1,10 @@
 package com.solobajos.solobajos.dto;
 
 
-public record LoginRequest (String username, String password) {
+import javax.validation.constraints.NotBlank;
+
+public record LoginRequest (@NotBlank(message = "{loginUserDto.login.notblank}")
+                            String username,
+                            @NotBlank(message = "{loginUserDto.login.notblank}")
+                            String password) {
 }

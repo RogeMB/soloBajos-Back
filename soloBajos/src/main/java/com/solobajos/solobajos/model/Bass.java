@@ -6,6 +6,7 @@ import org.hibernate.annotations.GenericGenerator;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -57,10 +58,12 @@ public class Bass {
 
     private double price;
 
-    private String discount;
+    @Builder.Default
+    private double discount = 0.0;
 
     @Column(name = "is_available")
-    private Boolean isAvailable;
+    @Builder.Default
+    private Boolean isAvailable = true;
 
    //@ElementCollection(fetch = FetchType.EAGER)
     /*
@@ -73,10 +76,12 @@ public class Bass {
 
     @Column(name = "created_at")
     @CreatedDate
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private LocalDateTime createdAt;
 
     @Column(name = "last_modified_date_at")
     @LastModifiedDate
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private LocalDateTime lastModifiedDateAt;
 
     // @JsonIgnore
@@ -101,4 +106,9 @@ public class Bass {
         categoria = null;
         c.getBassList().remove(this);
     }
+    @PreRemove
+    public void preDeleteBass (){
+        categoria.getBassList().remove(this);
+    }
+
 }

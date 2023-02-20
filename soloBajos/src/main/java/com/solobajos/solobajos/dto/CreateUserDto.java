@@ -1,13 +1,18 @@
 package com.solobajos.solobajos.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.solobajos.solobajos.validation.annotation.FieldsValueMatch;
 import com.solobajos.solobajos.validation.annotation.StrongPassword;
+import com.solobajos.solobajos.validation.annotation.UniqueEmail;
 import com.solobajos.solobajos.validation.annotation.UniqueUsername;
 import lombok.Builder;
 import org.hibernate.validator.constraints.URL;
 
+import javax.persistence.Column;
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
+import java.time.LocalDate;
 
 @Builder
 @FieldsValueMatch.List({
@@ -23,32 +28,29 @@ import javax.validation.constraints.NotEmpty;
 public record CreateUserDto (
         @UniqueUsername(message = "{createUserDto.username.unique}")
         @NotEmpty(message = "{createUserDto.username.notempty}")
-        @NotBlank(message = "{createUserDto.blankspaces.notblank}")
+        @NotBlank(message = "{createUserDto.username.notblank}")
         String username,
-        @StrongPassword
+        @NotEmpty(message = "{createUserDto.fullname.notempty}")
+        @NotBlank(message = "{createUserDto.fullname.notblank}")
+        String fullName,
+
+        @UniqueEmail(message = "{createUserDto.email.unique}")
+        @NotEmpty(message = "{createUserDto.email.notempty}")
+        @NotBlank(message = "{createUserDto.email.notblank}")
+        @Email(message = "{createUserDto.email.email}")
+        String email,
+
+        @Email(message = "{createUserDto.email.email}")
+        @NotEmpty(message = "{createUserDto.email.notempty}")
+        @NotBlank(message = "{createUserDto.email.notblank}")
+        String verifyEmail,
+        @StrongPassword(message = "{createUserDto.password.strong}")
         @NotEmpty(message = "{createUserDto.password.notempty}")
-        @NotBlank(message = "{createUserDto.blankspaces.notblank}")
+        @NotBlank(message = "{createUserDto.password.notblank}")
         String password,
 
-        @NotEmpty(message = "{createUserDto.verifypassword.notempty}")
-        @NotBlank(message = "{createUserDto.blankspaces.notblank}")
-        String verifyPassword,
-        @URL(message = "{createUserDto.avatar.url}")
-        String avatar,
-        @NotEmpty(message = "{createUserDto.fullname.notempty}")
-        @NotBlank(message = "{createUserDto.blankspaces.notblank}")
-        String fullName){
-/*
-  @NotEmpty(message = "{createUserDto.email.notempty}")
-                             @Email(message = "{createUserDto.email.email}")
-                             @NotBlank(message = "{createUserDto.blankspaces.notblank}")
-                             @UniqueEmail(message = "{createUserDto.email.unique}")
-                             String email,
-
-                             @Email(message = "{createUserDto.email.email}")
-                             @NotBlank(message = "{createUserDto.blankspaces.notblank}")
-                             @NotEmpty(message = "{createUserDto.email.notempty}")
-                             String verifyEmail,
-*/
-
+        @NotEmpty(message = "{createUserDto.verifyPassword.notempty}")
+        @NotBlank(message = "{createUserDto.verifyPassword.notblank}")
+        String verifyPassword
+        ){
 }

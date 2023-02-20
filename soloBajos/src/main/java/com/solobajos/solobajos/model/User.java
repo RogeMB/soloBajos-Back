@@ -14,7 +14,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -55,10 +54,6 @@ public class User implements UserDetails {
     private String password;
 
     private String avatar;
-
-    @Column(name = "birth_date")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
-    private LocalDate birthDate;
     @Builder.Default
     @Column(name = "account_non_expired")
     private boolean accountNonExpired = true;

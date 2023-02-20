@@ -11,7 +11,7 @@ import java.lang.annotation.*;
 @Documented
 public @interface StrongPassword {
 
-    String message() default "Username already exists";
+    String message() default "Password must be stronger";
 
     Class<?>[] groups() default {};
 
