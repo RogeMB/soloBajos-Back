@@ -4,6 +4,7 @@ package com.solobajos.solobajos.service;
 import com.solobajos.solobajos.dto.*;
 import com.solobajos.solobajos.exception.BassNotFoundException;
 import com.solobajos.solobajos.exception.EmptyBassListException;
+import com.solobajos.solobajos.exception.UserNotFoundException;
 import com.solobajos.solobajos.model.Bass;
 import com.solobajos.solobajos.model.User;
 import com.solobajos.solobajos.repository.BassRepository;
@@ -18,10 +19,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -92,23 +91,18 @@ public class BassService {
             throw new BassNotFoundException(id);
         }
     }
-
+    @Transactional
     public Bass makeFav(User user, Bass bass) {
-        List<User> userList = new ArrayList<>(bass.getUserList());
-        if(userRepository.findFirstFav(user.getId(), bass.getId())) {
-            userList.remove(userList.indexOf(user) + 1);
-            bass.setUserList(userList);
-            userRepository.save(user);
-        } else {
-            bass.getUserList().add(user);
-            userRepository.save(user);
+        User userFound = userRepository.findById(user.getId()).orElseThrow(() -> new UserNotFoundException(user.getId()));
+
+        if(userRepository.findFirstFav(userFound.getId(), bass.getId())){
+            userFound.removeFromBassListFav(bass);
+            userRepository.save(userFound);
+        }else {
+            userFound.addToBassFavList(bass);
+            userRepository.save(userFound);
         }
         return bassRepository.save(bass);
-    }
-
-    public List<BassResponse> favList(UUID id) {
-        List<Bass> bassList = bassRepository.bassListFavs(id);
-        return bassList.stream().map(BassResponse::fromBass).toList();
     }
 
 

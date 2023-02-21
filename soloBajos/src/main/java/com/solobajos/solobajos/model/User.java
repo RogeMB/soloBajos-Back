@@ -1,7 +1,5 @@
 package com.solobajos.solobajos.model;
 
-
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.solobajos.solobajos.converter.EnumSetRolesConverter;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
@@ -87,6 +85,7 @@ public class User implements UserDetails {
     private LocalDateTime lastPasswordChangeAt = LocalDateTime.now();
 
     @ManyToMany(fetch = FetchType.LAZY)
+    @Builder.Default
     @JoinTable(joinColumns = @JoinColumn(name = "user_id",
             foreignKey = @ForeignKey(name="FK_BASS_USER_ENTITY_USER")),
             inverseJoinColumns = @JoinColumn(name = "bass_id",
@@ -95,7 +94,22 @@ public class User implements UserDetails {
     )
     private List<Bass> bassList = new ArrayList<>();
 
+    // Helper de la asociación con Bass
+    public void addToBassFavList(Bass b) {
+        b.getUserList().add(this);
+        this.getBassList().add(b);
+    }
+    public void removeFromBassListFav(Bass b) {
+        b.getUserList().remove(this);
+        this.getBassList().remove(b);
+    }
 
+    @PreRemove
+    public void preRemoveFav(){
+        this.getBassList().forEach(bass -> {
+            bass.getUserList().remove(this);
+        });
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

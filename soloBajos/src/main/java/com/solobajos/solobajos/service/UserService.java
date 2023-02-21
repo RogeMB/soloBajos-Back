@@ -4,8 +4,10 @@ import com.solobajos.solobajos.dto.*;
 import com.solobajos.solobajos.exception.EmptyUserListException;
 import com.solobajos.solobajos.exception.PasswordNotMathException;
 import com.solobajos.solobajos.exception.UserNotFoundException;
+import com.solobajos.solobajos.model.Bass;
 import com.solobajos.solobajos.model.User;
 import com.solobajos.solobajos.model.UserRole;
+import com.solobajos.solobajos.repository.BassRepository;
 import com.solobajos.solobajos.repository.UserRepository;
 import com.solobajos.solobajos.search.specification.UserSpecificationBuilder;
 import com.solobajos.solobajos.search.util.SearchCriteria;
@@ -28,6 +30,8 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
     private final StorageService storageService;
+
+    private final BassRepository bassRepository;
     public User createUser(CreateUserDto createUserDto, EnumSet<UserRole> roles) {
         return userRepository.save(
             User.builder()
@@ -112,5 +116,15 @@ public class UserService {
         return userRepository.existsByEmail(email);
     }
 
+    public List<BassResponse> favList(UUID id) {
+        List<Bass> bassList = bassRepository.bassListFavs(id);
+        return bassList.stream().map(BassResponse::fromBass).toList();
+    }
 
+    public UserResponse bannUser(UUID id, BannUserDto bannUserDto) {
+        User founded = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException(id));
+        founded.setEnabled(bannUserDto.getEnabled());
+        userRepository.save(founded);
+        return UserResponse.fromUser(founded);
+    }
 }

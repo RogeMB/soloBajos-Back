@@ -16,4 +16,10 @@ public interface UserRepository extends JpaRepository<User, UUID>, JpaSpecificat
     boolean existsByEmail(String email);
     @Query(value = "SELECT CASE WHEN COUNT(b) > 0 THEN true ELSE false END FROM Bass b JOIN b.userList u WHERE b.id = :bassId AND u.id = :userId")
     boolean findFirstFav(@Param("userId") UUID userId, @Param("bassId") UUID bassId);
+
+    /* @Query("""
+            SELECT CASE WHEN COUNT(b) > 0 THEN true ELSE false END
+            FROM Bass b JOIN FETCH b.userList u
+            WHERE b.id = :bassId AND u.id = :userId
+            """)*/
 }
