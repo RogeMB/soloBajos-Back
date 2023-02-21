@@ -46,16 +46,21 @@ public class UserController {
         return UserResponse.fromUser(userService.findById(id));
     }
 
+    @GetMapping("/user/profile")
+    public UserResponse getProfile(@AuthenticationPrincipal User loggedUser) {
+        return UserResponse.fromUser(loggedUser);
+    }
+
     @PutMapping("/user/edit")
     public UserResponse editDetails(@AuthenticationPrincipal User loggedUser,
-                                    @Valid @RequestPart EditUserDto editUserDto, @RequestPart MultipartFile file) {
+                                    @Valid @RequestPart("editUserDto") EditUserDto editUserDto, @RequestPart("file") MultipartFile file) {
         User edited = userService.editDetails(loggedUser, editUserDto, file);
         return UserResponse.fromUser(edited);
     }
 
-    @PutMapping("/user/changePassword")
+    @PutMapping("/user/changepassword")
     public UserResponse changePassword(@Valid @RequestBody ChangePasswordRequest changePasswordRequest,
-                                       @AuthenticationPrincipal User loggedUser) throws PasswordNotMathException {
+                                       @AuthenticationPrincipal User loggedUser) {
 
         User modified = userService.editPassword(loggedUser, changePasswordRequest);
         return (UserResponse.fromUser(modified));
@@ -64,6 +69,12 @@ public class UserController {
     @DeleteMapping("/admin/user/{id}")
     public ResponseEntity<?> delete(@PathVariable UUID id) {
         userService.deleteById(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping("/user/deleteAccount")
+    public ResponseEntity<?> deleteAccount(@AuthenticationPrincipal User loggedUser) {
+        userService.delete(loggedUser);
         return ResponseEntity.noContent().build();
     }
 

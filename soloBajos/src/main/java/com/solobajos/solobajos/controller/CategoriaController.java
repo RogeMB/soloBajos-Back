@@ -38,9 +38,8 @@ public class CategoriaController {
     }
 
     @PostMapping("/admin/categoria")
-    public ResponseEntity<CategoriaResponse> createCategoria(@Valid @RequestPart CreateCategoriaDto createCategoriaDto,
-    @RequestPart("file") MultipartFile file) {
-        Categoria created = categoriaService.save(createCategoriaDto, file);
+    public ResponseEntity<CategoriaResponse> createCategoria(@Valid @RequestBody CreateCategoriaDto createCategoriaDto) {
+        Categoria created = categoriaService.save(createCategoriaDto);
 
         URI createdURI = ServletUriComponentsBuilder
                 .fromCurrentRequest()
@@ -54,7 +53,7 @@ public class CategoriaController {
     @PutMapping("/admin/categoria/{id}")
     public CategoriaResponse editCategoria(@PathVariable UUID id, @Valid
                                            @RequestPart("file") MultipartFile file,
-                                           @RequestPart("editUser")EditCategoriaDto editCategoriaDto){
+                                           @RequestPart("editCategoriaDto")EditCategoriaDto editCategoriaDto){
         Categoria edited = categoriaService.edit(id, editCategoriaDto, file);
         return CategoriaResponse.fromCategoria(edited);
     }

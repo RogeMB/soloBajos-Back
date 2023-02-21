@@ -2,6 +2,7 @@ package com.solobajos.solobajos.error;
 
 import com.solobajos.solobajos.error.model.impl.ApiErrorImpl;
 import com.solobajos.solobajos.error.model.impl.ApiValidationSubError;
+import com.solobajos.solobajos.exception.BadRequestException;
 import com.solobajos.solobajos.security.errorhandling.JwtTokenException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -35,6 +36,11 @@ public class GlobalRestControllerAdvice extends ResponseEntityExceptionHandler {
     @ExceptionHandler(EntityNotFoundException.class)
     public ResponseEntity<?> handleNotFoundException(EntityNotFoundException exception, WebRequest request) {
         return buildApiError(exception.getMessage(), request, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler({BadRequestException.class})
+    public ResponseEntity<?> handleInvalidRequest(BadRequestException exception, WebRequest request){
+        return buildApiError(exception.getMessage(), request, HttpStatus.BAD_REQUEST);
     }
 
     /*@Override

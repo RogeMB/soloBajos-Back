@@ -50,12 +50,10 @@ public class CategoriaService {
     }
 
     @Transactional
-    public Categoria save(CreateCategoriaDto createCategoriaDto,  MultipartFile file) {
-        String filename = storageService.store(file);
+    public Categoria save(CreateCategoriaDto createCategoriaDto) {
         return categoriaRepository.save(
                 Categoria.builder()
                         .name(createCategoriaDto.name())
-                        .image(filename)
                         .build());
     }
 

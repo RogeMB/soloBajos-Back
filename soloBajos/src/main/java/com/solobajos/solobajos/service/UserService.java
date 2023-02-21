@@ -78,17 +78,26 @@ public class UserService {
     }
 
 
-    public User editPassword(User user, ChangePasswordRequest changePasswordRequest) throws PasswordNotMathException {
+    public User editPassword(User user, ChangePasswordRequest changePasswordRequest) {
         if(this.passwordMatch(user, changePasswordRequest.oldPassword())){
                 user.setPassword(passwordEncoder.encode(changePasswordRequest.newPassword()));
                 return userRepository.save(user);
-            }
-        throw new PasswordNotMathException();
+        }else {
+            throw new PasswordNotMathException();
+        }
     }
 
     public void deleteById(UUID id) {
         if (userRepository.existsById(id))
             userRepository.deleteById(id);
+        else {
+            throw new UserNotFoundException(id);
+        }
+    }
+
+    //revisar transactional?
+    public void delete(User user) {
+        deleteById(user.getId());
     }
 
     public boolean passwordMatch(User user, String clearPassword) {
