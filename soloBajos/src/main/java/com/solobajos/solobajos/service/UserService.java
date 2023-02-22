@@ -4,8 +4,10 @@ import com.solobajos.solobajos.dto.*;
 import com.solobajos.solobajos.exception.EmptyUserListException;
 import com.solobajos.solobajos.exception.PasswordNotMathException;
 import com.solobajos.solobajos.exception.UserNotFoundException;
+import com.solobajos.solobajos.model.Bass;
 import com.solobajos.solobajos.model.User;
 import com.solobajos.solobajos.model.UserRole;
+import com.solobajos.solobajos.repository.BassRepository;
 import com.solobajos.solobajos.repository.UserRepository;
 import com.solobajos.solobajos.search.specification.UserSpecificationBuilder;
 import com.solobajos.solobajos.search.util.SearchCriteria;
@@ -16,8 +18,6 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-
-import javax.persistence.EntityNotFoundException;
 
 import java.util.EnumSet;
 import java.util.List;
@@ -30,6 +30,8 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
     private final StorageService storageService;
+
+    private final BassRepository bassRepository;
     public User createUser(CreateUserDto createUserDto, EnumSet<UserRole> roles) {
         return userRepository.save(
             User.builder()
@@ -80,17 +82,26 @@ public class UserService {
     }
 
 
-    public User editPassword(User user, ChangePasswordRequest changePasswordRequest) throws PasswordNotMathException {
+    public User editPassword(User user, ChangePasswordRequest changePasswordRequest) {
         if(this.passwordMatch(user, changePasswordRequest.oldPassword())){
                 user.setPassword(passwordEncoder.encode(changePasswordRequest.newPassword()));
                 return userRepository.save(user);
-            }
-        throw new PasswordNotMathException();
+        }else {
+            throw new PasswordNotMathException();
+        }
     }
 
     public void deleteById(UUID id) {
         if (userRepository.existsById(id))
             userRepository.deleteById(id);
+        else {
+            throw new UserNotFoundException(id);
+        }
+    }
+
+    //revisar transactional?
+    public void delete(User user) {
+        deleteById(user.getId());
     }
 
     public boolean passwordMatch(User user, String clearPassword) {
@@ -105,5 +116,15 @@ public class UserService {
         return userRepository.existsByEmail(email);
     }
 
+    public List<BassResponse> favList(UUID id) {
+        List<Bass> bassList = bassRepository.bassListFavs(id);
+        return bassList.stream().map(BassResponse::fromBass).toList();
+    }
 
+    public UserResponse bannUser(UUID id, BannUserDto bannUserDto) {
+        User founded = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException(id));
+        founded.setEnabled(bannUserDto.getEnabled());
+        userRepository.save(founded);
+        return UserResponse.fromUser(founded);
+    }
 }

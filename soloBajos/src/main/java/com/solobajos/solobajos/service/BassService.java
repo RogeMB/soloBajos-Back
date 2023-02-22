@@ -4,8 +4,11 @@ package com.solobajos.solobajos.service;
 import com.solobajos.solobajos.dto.*;
 import com.solobajos.solobajos.exception.BassNotFoundException;
 import com.solobajos.solobajos.exception.EmptyBassListException;
+import com.solobajos.solobajos.exception.UserNotFoundException;
 import com.solobajos.solobajos.model.Bass;
+import com.solobajos.solobajos.model.User;
 import com.solobajos.solobajos.repository.BassRepository;
+import com.solobajos.solobajos.repository.UserRepository;
 import com.solobajos.solobajos.search.specification.BassSpecificationBuilder;
 import com.solobajos.solobajos.search.util.SearchCriteria;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +30,7 @@ public class BassService {
     private final StorageService storageService;
 
     private final CategoriaService categoriaService;
+    private final UserRepository userRepository;
 
     public PageDto<BassResponse> findAllSearch(List<SearchCriteria> params, Pageable pageable){
         BassSpecificationBuilder bassSpecificationBuilderBuilder = new BassSpecificationBuilder(params);
@@ -46,14 +50,12 @@ public class BassService {
     }
 
     @Transactional
-    public Bass save(CreateBassDto createBassDto, MultipartFile file) {
-        String filename = storageService.store(file);
+    public Bass save(CreateBassDto createBassDto) {
         return bassRepository.save(
                 Bass.builder()
                         .brand(createBassDto.brand())
                         .model(createBassDto.model())
                         .frets(createBassDto.frets())
-                        .image(filename)
                         .origin(createBassDto.origin())
                         .builtYear(createBassDto.builtYear())
                         .price(createBassDto.price())
@@ -61,7 +63,6 @@ public class BassService {
                         .state(createBassDto.state())
                         .isAvailable(createBassDto.isAvailable())
                         .categoria(categoriaService.findById(createBassDto.categoria_id()))
-                        //.createdAt(LocalDateTime.now())
                         .build());
     }
 
@@ -90,4 +91,19 @@ public class BassService {
             throw new BassNotFoundException(id);
         }
     }
+    @Transactional
+    public Bass makeFav(User user, Bass bass) {
+        User userFound = userRepository.findById(user.getId()).orElseThrow(() -> new UserNotFoundException(user.getId()));
+
+        if(userRepository.findFirstFav(userFound.getId(), bass.getId())){
+            userFound.removeFromBassListFav(bass);
+            userRepository.save(userFound);
+        }else {
+            userFound.addToBassFavList(bass);
+            userRepository.save(userFound);
+        }
+        return bassRepository.save(bass);
+    }
+
+
 }

@@ -11,6 +11,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.time.Year;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -94,8 +95,10 @@ public class Bass {
     private Categoria categoria;
 
 
+
     @ManyToMany(mappedBy = "bassList", fetch = FetchType.LAZY)
-    private List<User> userList;
+    @Builder.Default
+    private List<User> userList = new ArrayList<>();
 
     // Helper de la asociación con Categoria
     public void addToCategoria(Categoria c) {

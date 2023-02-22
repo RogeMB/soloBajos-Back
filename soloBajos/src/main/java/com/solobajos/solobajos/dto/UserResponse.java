@@ -22,6 +22,8 @@ public class UserResponse {
 
     protected String email;
     protected String avatar;
+
+    protected Boolean enabled;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy HH:mm:ss")
     protected LocalDateTime createdAt;
 
@@ -34,6 +36,7 @@ public class UserResponse {
                 .avatar(user.getAvatar())
                 .email(user.getEmail())
                 .createdAt(user.getCreatedAt())
+                .enabled(user.isEnabled())
                 .build();
     }
 

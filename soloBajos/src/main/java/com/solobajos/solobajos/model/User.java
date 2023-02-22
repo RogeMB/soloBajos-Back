@@ -1,7 +1,5 @@
 package com.solobajos.solobajos.model;
 
-
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.solobajos.solobajos.converter.EnumSetRolesConverter;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
@@ -10,12 +8,12 @@ import org.springframework.data.annotation.CreatedDate;
 import org.hibernate.annotations.Parameter;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -48,12 +46,14 @@ public class User implements UserDetails {
     @Column(unique = true, updatable = false)
     private String username;
 
+    @Column(name = "full_name")
     private String fullName;
 
     private String email;
     private String password;
 
-    private String avatar;
+    @Builder.Default
+    private String avatar = "userDefault.png";
     @Builder.Default
     @Column(name = "account_non_expired")
     private boolean accountNonExpired = true;
@@ -71,17 +71,21 @@ public class User implements UserDetails {
 
     @CreatedDate
     @Column(name = "created_at")
+    @DateTimeFormat(iso=DateTimeFormat.ISO.DATE)
     private LocalDateTime createdAt;
 
     @LastModifiedDate
     @Column(name = "last_modified_date_at")
+    @DateTimeFormat(iso=DateTimeFormat.ISO.DATE)
     private LocalDateTime lastModifiedDateAt;
 
     @Builder.Default
     @Column(name = "last_password_change_at")
+    @DateTimeFormat(iso=DateTimeFormat.ISO.DATE)
     private LocalDateTime lastPasswordChangeAt = LocalDateTime.now();
 
     @ManyToMany(fetch = FetchType.LAZY)
+    @Builder.Default
     @JoinTable(joinColumns = @JoinColumn(name = "user_id",
             foreignKey = @ForeignKey(name="FK_BASS_USER_ENTITY_USER")),
             inverseJoinColumns = @JoinColumn(name = "bass_id",
@@ -90,7 +94,22 @@ public class User implements UserDetails {
     )
     private List<Bass> bassList = new ArrayList<>();
 
+    // Helper de la asociación con Bass
+    public void addToBassFavList(Bass b) {
+        b.getUserList().add(this);
+        this.getBassList().add(b);
+    }
+    public void removeFromBassListFav(Bass b) {
+        b.getUserList().remove(this);
+        this.getBassList().remove(b);
+    }
 
+    @PreRemove
+    public void preRemoveFav(){
+        this.getBassList().forEach(bass -> {
+            bass.getUserList().remove(this);
+        });
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

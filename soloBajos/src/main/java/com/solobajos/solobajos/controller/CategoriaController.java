@@ -4,15 +4,20 @@ package com.solobajos.solobajos.controller;
 import com.solobajos.solobajos.dto.*;
 import com.solobajos.solobajos.model.Categoria;
 import com.solobajos.solobajos.service.CategoriaService;
+import com.solobajos.solobajos.service.StorageService;
+import com.solobajos.solobajos.utils.MediaTypeUrlResource;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.info.Info;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import javax.persistence.EntityNotFoundException;
 import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
@@ -25,7 +30,7 @@ import java.util.UUID;
 public class CategoriaController {
 
     private final CategoriaService categoriaService;
-
+    private final StorageService storageService;
     @GetMapping("/categoria")
     public List<CategoriaResponse> getAllCategorias() {
         return categoriaService.findAll().stream().map(CategoriaResponse::fromCategoria).toList();
@@ -37,10 +42,21 @@ public class CategoriaController {
         return CategoriaResponse.fromCategoria(categoriaService.findById(id));
     }
 
+    @GetMapping("/categoria/image/{id}")
+    public ResponseEntity<Resource> getImage(@PathVariable UUID id){
+        Categoria categoria = categoriaService.findById(id);
+        if(categoria.getImage() == null) throw new EntityNotFoundException("Image not found");
+        MediaTypeUrlResource resource =
+                (MediaTypeUrlResource) storageService.loadAsResource(categoria.getImage());
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .header("Content-Type", resource.getType())
+                .body(resource);
+    }
+
     @PostMapping("/admin/categoria")
-    public ResponseEntity<CategoriaResponse> createCategoria(@Valid @RequestPart CreateCategoriaDto createCategoriaDto,
-    @RequestPart("file") MultipartFile file) {
-        Categoria created = categoriaService.save(createCategoriaDto, file);
+    public ResponseEntity<CategoriaResponse> createCategoria(@Valid @RequestBody CreateCategoriaDto createCategoriaDto) {
+        Categoria created = categoriaService.save(createCategoriaDto);
 
         URI createdURI = ServletUriComponentsBuilder
                 .fromCurrentRequest()
@@ -52,9 +68,9 @@ public class CategoriaController {
 
 
     @PutMapping("/admin/categoria/{id}")
-    public CategoriaResponse editCategoria(@PathVariable UUID id, @Valid
+    public CategoriaResponse editCategoria(@PathVariable UUID id,
                                            @RequestPart("file") MultipartFile file,
-                                           @RequestPart("editUser")EditCategoriaDto editCategoriaDto){
+                                           @Valid @RequestPart("editCategoriaDto")EditCategoriaDto editCategoriaDto){
         Categoria edited = categoriaService.edit(id, editCategoriaDto, file);
         return CategoriaResponse.fromCategoria(edited);
     }

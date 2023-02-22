@@ -1,18 +1,16 @@
 package com.solobajos.solobajos.dto;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
+
 import com.solobajos.solobajos.validation.annotation.FieldsValueMatch;
 import com.solobajos.solobajos.validation.annotation.StrongPassword;
 import com.solobajos.solobajos.validation.annotation.UniqueEmail;
 import com.solobajos.solobajos.validation.annotation.UniqueUsername;
 import lombok.Builder;
-import org.hibernate.validator.constraints.URL;
 
-import javax.persistence.Column;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
-import java.time.LocalDate;
+
 
 @Builder
 @FieldsValueMatch.List({

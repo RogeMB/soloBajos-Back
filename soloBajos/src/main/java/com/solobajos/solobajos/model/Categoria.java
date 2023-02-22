@@ -4,6 +4,7 @@ package com.solobajos.solobajos.model;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import org.springframework.web.util.UriBuilder;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -37,7 +38,8 @@ public class Categoria {
 
     private String name;
 
-    private String image;
+    @Builder.Default
+    private String image = "categoriaDefault.png";
 
     @Builder.Default
     @OneToMany(mappedBy = "categoria", fetch = FetchType.LAZY)
