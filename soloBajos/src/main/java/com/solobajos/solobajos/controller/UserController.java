@@ -40,13 +40,14 @@ import java.util.UUID;
 public class UserController {
     private final UserService userService;
     private final StorageService storageService;
+    private static class schemaPageable extends PageDto<UserResponse>{}
 
     @Operation(summary = "Obtiene todos los users")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200",
                     description = "Se han encontrado users",
                     content = { @Content(mediaType = "application/json",
-                            array = @ArraySchema(schema = @Schema(implementation = PageDto.class)),
+                            array = @ArraySchema(schema = @Schema(implementation = schemaPageable.class)),
                             examples = {@ExampleObject(
                                     value = """
                                             {
@@ -58,6 +59,9 @@ public class UserController {
                                                         "email": "rogelio@gmail.com",
                                                         "avatar": "userDefault.png",
                                                         "enabled": true,
+                                                        "roles": [
+                                                            "ADMIN"
+                                                        ],
                                                         "createdAt": "17/02/2023 00:00:00"
                                                     },
                                                     {
@@ -67,22 +71,16 @@ public class UserController {
                                                         "email": "javier@gmail.com",
                                                         "avatar": "userDefault.png",
                                                         "enabled": true,
+                                                        "roles": [
+                                                            "USER"
+                                                        ],
                                                         "createdAt": "17/02/2023 00:00:00"
-                                                    },
-                                                    {
-                                                        "id": "cd9b1ddd-1c67-475a-885b-181426b4ddd6",
-                                                        "username": "mariab",
-                                                        "fullName": "María Barrera",
-                                                        "email": "mariab@hotmail.com",
-                                                        "avatar": "userDefault.png",
-                                                        "enabled": true,
-                                                        "createdAt": "22/02/2023 21:15:32"
                                                     }
                                                 ],
                                                 "last": true,
                                                 "first": true,
                                                 "totalPages": 1,
-                                                "totalElements": 3,
+                                                "totalElements": 2,
                                                 "currentPage": 0
                                             }
                                             """
@@ -93,6 +91,12 @@ public class UserController {
                     content = @Content),
             @ApiResponse(responseCode = "400",
                     description = "No existe el user que buscaba",
+                    content = @Content),
+            @ApiResponse(responseCode = "401",
+                    description = "No está autorizado",
+                    content = @Content),
+            @ApiResponse(responseCode = "403",
+                    description = "Acción prohibida para este user",
                     content = @Content),
     })
     @GetMapping("/admin/user")
@@ -114,13 +118,16 @@ public class UserController {
                             examples = {@ExampleObject(
                                     value = """
                                             {
-                                                "id": "a520d2e5-16c1-44ce-a120-ed19c862d2bd",
-                                                "username": "rogemb",
-                                                "fullName": "Roge Mohigefer",
-                                                "email": "rogelio@gmail.com",
+                                                "id": "8c5eedfc-df65-4552-8b37-84507e432a5a",
+                                                "username": "javiermb",
+                                                "fullName": "Javier Mohigefer",
+                                                "email": "javier@gmail.com",
                                                 "avatar": "userDefault.png",
                                                 "enabled": true,
-                                                "createdAt": "17/02/2023 00:00:00"
+                                                "roles": [
+                                                    "USER"
+                                                ],
+                                                "createdAt": "17/02/2023 00:00:00",
                                             }
                                             """
                             )}
@@ -130,6 +137,12 @@ public class UserController {
                     content = @Content),
             @ApiResponse(responseCode = "400",
                     description = "No existe el user que buscaba",
+                    content = @Content),
+            @ApiResponse(responseCode = "401",
+                    description = "No está autorizado",
+                    content = @Content),
+            @ApiResponse(responseCode = "403",
+                    description = "Acción prohibida para este user",
                     content = @Content),
     })
     @GetMapping("/admin/user/{id}")
@@ -147,19 +160,25 @@ public class UserController {
                             examples = {@ExampleObject(
                                     value = """
                                             {
-                                                "id": "a520d2e5-16c1-44ce-a120-ed19c862d2bd",
-                                                "username": "rogemb",
-                                                "fullName": "Roge Mohigefer",
-                                                "email": "rogelio@gmail.com",
+                                                "id": "8c5eedfc-df65-4552-8b37-84507e432a5a",
+                                                "username": "javiermb",
+                                                "fullName": "Javier Mohigefer",
+                                                "email": "javier@gmail.com",
                                                 "avatar": "userDefault.png",
                                                 "enabled": true,
-                                                "createdAt": "17/02/2023 00:00:00"
+                                                "roles": [
+                                                    "USER"
+                                                ],
+                                                "createdAt": "17/02/2023 00:00:00",
                                             }
                                             """
                             )}
                     )}),
             @ApiResponse(responseCode = "404",
                     description = "No se ha encontrado ningún user",
+                    content = @Content),
+            @ApiResponse(responseCode = "401",
+                    description = "No está autorizado",
                     content = @Content),
     })
     @GetMapping("/user/profile")
@@ -183,6 +202,12 @@ public class UserController {
                     )}),
             @ApiResponse(responseCode = "404",
                     description = "No se ha encontrado ningún user",
+                    content = @Content),
+            @ApiResponse(responseCode = "401",
+                    description = "No está autorizado",
+                    content = @Content),
+            @ApiResponse(responseCode = "415",
+                    description = "Formato no permitido",
                     content = @Content),
     })
     @GetMapping("/user/image")
@@ -226,6 +251,9 @@ public class UserController {
             @ApiResponse(responseCode = "404",
                     description = "No se ha encontrado ningún favorito",
                     content = @Content),
+            @ApiResponse(responseCode = "401",
+                    description = "No está autorizado",
+                    content = @Content),
     })
     @GetMapping("/user/fav")
     public List<BassResponse> favList(@AuthenticationPrincipal User user) {
@@ -244,10 +272,13 @@ public class UserController {
                                             {
                                                 "id": "a520d2e5-16c1-44ce-a120-ed19c862d2bd",
                                                 "username": "rogemb",
-                                                "fullName": "Rogelio Mohigefer Barrera",
+                                                "fullName": "Roge Mohigefer",
                                                 "email": "rogelio@gmail.com",
-                                                "avatar": "userDefault2_739400.png",
+                                                "avatar": "userDefault.png",
                                                 "enabled": true,
+                                                "roles": [
+                                                    "ADMIN"
+                                                ],
                                                 "createdAt": "17/02/2023 00:00:00"
                                             }
                                             """
@@ -255,6 +286,9 @@ public class UserController {
                     )}),
             @ApiResponse(responseCode = "400",
                     description = "No se ha podido modificar el user",
+                    content = @Content),
+            @ApiResponse(responseCode = "401",
+                    description = "No está autorizado",
                     content = @Content),
     })
     @PutMapping("/user/edit")
@@ -289,6 +323,9 @@ public class UserController {
             @ApiResponse(responseCode = "400",
                     description = "No se ha podido modificar la password",
                     content = @Content),
+            @ApiResponse(responseCode = "401",
+                    description = "No está autorizado",
+                    content = @Content),
     })
     @PutMapping("/user/changepassword")
     public UserResponse changePassword(@Valid @RequestBody ChangePasswordRequest changePasswordRequest,
@@ -298,8 +335,14 @@ public class UserController {
         return (UserResponse.fromUser(modified));
     }
     @Operation(summary = "Este método elimina un usuario localizado por su id")
-    @ApiResponse(responseCode = "204", description = "Usuario borrado con éxito",
-            content = @Content)
+    @ApiResponses(value={@ApiResponse(responseCode = "204", description = "User borrado con éxito",
+            content = @Content),
+            @ApiResponse(responseCode = "401",
+                    description = "No está autorizado",
+                    content = @Content),
+            @ApiResponse(responseCode = "403",
+                    description = "Acción prohibida para este user",
+                    content = @Content)})
     @Parameter(description = "El id del usuario que se quiere eliminar", name = "id", required = true)
     @DeleteMapping("/admin/user/{id}")
     public ResponseEntity<?> delete(@PathVariable UUID id) {
@@ -308,8 +351,14 @@ public class UserController {
     }
 
     @Operation(summary = "Este método elimina la cuenta del usuario autenticado")
-    @ApiResponse(responseCode = "204", description = "Usuario borrado con éxito",
-            content = @Content)
+    @ApiResponses(value={@ApiResponse(responseCode = "204", description = "Cuenta borrada con éxito",
+            content = @Content),
+            @ApiResponse(responseCode = "401",
+                    description = "No está autorizado",
+                    content = @Content),
+            @ApiResponse(responseCode = "403",
+                    description = "Acción prohibida para este user",
+                    content = @Content)})
     @Parameter(description = "El id del usuario que se quiere eliminar", name = "id", required = true)
     @DeleteMapping("/user/deletemyaccount")
     public ResponseEntity<?> deleteMyAccount(@AuthenticationPrincipal User loggedUser) {

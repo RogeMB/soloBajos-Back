@@ -46,14 +46,14 @@ public class BassController {
 
     private final BassService bassService;
     private final StorageService storageService;
-
+    private static class schemaPageable extends PageDto<BassResponse>{}
 
     @Operation(summary = "Obtiene todos los bajos paginados")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200",
                     description = "Se han encontrado bajos",
                     content = { @Content(mediaType = "application/json",
-                            array = @ArraySchema(schema = @Schema(implementation = PageDto.class)),
+                            array = @ArraySchema(schema = @Schema(implementation = schemaPageable.class)),
                             examples = {@ExampleObject(
                                     value = """
                                             {
@@ -122,6 +122,9 @@ public class BassController {
             @ApiResponse(responseCode = "400",
                     description = "No existe el bajo que buscaba",
                     content = @Content),
+            @ApiResponse(responseCode = "401",
+                    description = "No está autorizado",
+                    content = @Content),
     })
     @GetMapping("/bass")
     public PageDto<BassResponse> getAllBasses(
@@ -163,6 +166,9 @@ public class BassController {
             @ApiResponse(responseCode = "400",
                     description = "No existe el bajo que buscaba",
                     content = @Content),
+            @ApiResponse(responseCode = "401",
+                    description = "No está autorizado",
+                    content = @Content),
     })
     @GetMapping("/bass/{id}")
     public BassResponse getById(@PathVariable UUID id) {
@@ -189,6 +195,12 @@ public class BassController {
                     content = @Content),
             @ApiResponse(responseCode = "400",
                     description = "No existe el bajo que buscaba",
+                    content = @Content),
+            @ApiResponse(responseCode = "401",
+                    description = "No está autorizado",
+                    content = @Content),
+            @ApiResponse(responseCode = "415",
+                    description = "Formato no permitido",
                     content = @Content),
     })
     @GetMapping("/bass/image/{id}")
@@ -226,6 +238,12 @@ public class BassController {
             @ApiResponse(responseCode = "400",
                     description = "No se han introducido correctamente los datos del nuevo bajo",
                     content = @Content),
+            @ApiResponse(responseCode = "401",
+                    description = "No está autorizado",
+                    content = @Content),
+            @ApiResponse(responseCode = "403",
+                    description = "Acción prohibida para este user",
+                    content = @Content),
     })
     @PostMapping("/admin/bass")
     public ResponseEntity<BassResponse> createBass(@Valid @RequestBody CreateBassDto createBassDto) {
@@ -262,6 +280,9 @@ public class BassController {
                                     """)) }),
             @ApiResponse(responseCode = "400",
                     description = "No se han introducido correctamente el id",
+                    content = @Content),
+            @ApiResponse(responseCode = "401",
+                    description = "No está autorizado",
                     content = @Content),
     })
     @PostMapping("/bass/fav/{id}")
@@ -306,6 +327,12 @@ public class BassController {
             @ApiResponse(responseCode = "400",
                     description = "No se ha podido modificar el bajo",
                     content = @Content),
+            @ApiResponse(responseCode = "401",
+                    description = "No está autorizado",
+                    content = @Content),
+            @ApiResponse(responseCode = "403",
+                    description = "Acción prohibida para este user",
+                    content = @Content),
     })
     @PutMapping("/admin/bass/{id}")
     public BassResponse editBass(@PathVariable UUID id,
@@ -317,8 +344,14 @@ public class BassController {
 
 
     @Operation(summary = "Este método elimina un bajo localizado por su id")
-    @ApiResponse(responseCode = "204", description = "Bajo borrado con éxito",
-            content = @Content)
+    @ApiResponses(value={@ApiResponse(responseCode = "204", description = "Bajo borrado con éxito",
+            content = @Content),
+            @ApiResponse(responseCode = "401",
+                    description = "No está autorizado",
+                    content = @Content),
+            @ApiResponse(responseCode = "403",
+                    description = "Acción prohibida para este user",
+                    content = @Content)})
     @Parameter(description = "El id del bajo que se quiere eliminar", name = "id", required = true)
     @DeleteMapping("/admin/bass/{id}")
     public ResponseEntity<?> deleteBass(@PathVariable UUID id) {

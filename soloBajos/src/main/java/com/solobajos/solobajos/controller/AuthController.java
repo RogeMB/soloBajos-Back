@@ -52,17 +52,23 @@ public class AuthController {
                             array = @ArraySchema(schema = @Schema(implementation = UserResponse.class)),
                             examples = @ExampleObject(value = """
                                     {
-                                        "id": "400d3b41-2a44-48a8-b31b-81309f05c502",
+                                        "id": "26fcbdac-c940-4ca5-9105-5d816d52af03",
                                         "username": "mariab",
                                         "fullName": "María Barrera",
                                         "email": "mariab@hotmail.com",
                                         "avatar": "userDefault.png",
                                         "enabled": true,
-                                        "createdAt": "23/02/2023 06:24:38"
+                                        "roles": [
+                                            "USER"
+                                        ],
+                                        "createdAt": "23/02/2023 11:51:06"
                                     }
                                     """)) }),
             @ApiResponse(responseCode = "400",
                     description = "No se han introducido correctamente los datos del nuevo user",
+                    content = @Content),
+            @ApiResponse(responseCode = "401",
+                    description = "No está autorizado",
                     content = @Content),
     })
     @PostMapping("/auth/register")
@@ -85,19 +91,30 @@ public class AuthController {
                             array = @ArraySchema(schema = @Schema(implementation = UserResponse.class)),
                             examples = @ExampleObject(value = """
                                     {
-                                        "id": "400d3b41-2a44-48a8-b31b-81309f05c502",
-                                        "username": "mariab",
-                                        "fullName": "María Barrera",
-                                        "email": "mariab@hotmail.com",
+                                        "id": "a520d2e5-16c1-44ce-a120-ed19c862d2bd",
+                                        "username": "rogemb",
+                                        "fullName": "Roge Mohigefer",
+                                        "email": "rogelio@gmail.com",
                                         "avatar": "userDefault.png",
                                         "enabled": true,
-                                        "createdAt": "23/02/2023 06:24:38"
+                                        "roles": [
+                                            "ADMIN"
+                                        ],
+                                        "createdAt": "17/02/2023 00:00:00",
+                                        "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhNTIwZDJlNS0xNmMxLTQ0Y2UtYTEyMC1lZDE5Yzg2MmQyYmQiLCJpYXQiOjE2NzcxNDk0MDIsImV4cCI6MTY3ODQ0NTQwMn0.-NMeBaPQ3ohKuyRh-jlDciJYXPuN_6sWDomHGH5OYJNwM8iM51675Iz5m69YtdstbFwsrueZ6vQvNujb44NauA"
                                     }
                                     """)) }),
             @ApiResponse(responseCode = "400",
                     description = "No se han introducido correctamente los datos del nuevo admin",
                     content = @Content),
+            @ApiResponse(responseCode = "401",
+                    description = "No está autorizado",
+                    content = @Content),
+            @ApiResponse(responseCode = "403",
+                    description = "Acción prohibida para este user",
+                    content = @Content),
     })
+    @PostMapping("/admin/auth/register")
     public ResponseEntity<UserResponse> createUserWithAdminRole(@Valid @RequestBody CreateUserDto createUserDto) {
         User user = userService.createUserWithAdminRole(createUserDto);
 
@@ -123,12 +140,18 @@ public class AuthController {
                                         "email": "javier@gmail.com",
                                         "avatar": "userDefault.png",
                                         "enabled": true,
+                                        "roles": [
+                                            "USER"
+                                        ],
                                         "createdAt": "17/02/2023 00:00:00",
-                                        "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI4YzVlZWRmYy1kZjY1LTQ1NTItOGIzNy04NDUwN2U0MzJhNWEiLCJpYXQiOjE2NzcxMzAwMzksImV4cCI6MTY3ODQyNjAzOX0.unGyQpM2nokVeD3byXmqrawe7Q09F4K-wpIBMmMOdzJOUJQQM9WW5rLJosRR2Gm7weYYQYjwnTYr4NoelMTJQw"
+                                        "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI4YzVlZWRmYy1kZjY1LTQ1NTItOGIzNy04NDUwN2U0MzJhNWEiLCJpYXQiOjE2NzcxNDk0NTksImV4cCI6MTY3ODQ0NTQ1OX0.B804dxz_LHS-hqYKKV_9YNclOkzk2g1_0sxErAQwsYyWllrvkyppAyMhrjWgHf1WobdymLsyo4ewQbew-S-diQ"
                                     }
                                     """)) }),
             @ApiResponse(responseCode = "400",
                     description = "No se han introducido correctamente los datos del usuario",
+                    content = @Content),
+            @ApiResponse(responseCode = "401",
+                    description = "No está autorizado",
                     content = @Content),
     })
     @PostMapping("/auth/login")

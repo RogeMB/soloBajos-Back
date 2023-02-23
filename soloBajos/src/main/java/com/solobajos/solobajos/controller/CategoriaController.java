@@ -80,6 +80,9 @@ public class CategoriaController {
             @ApiResponse(responseCode = "404",
                     description = "No se ha encontrado ninguna categoría",
                     content = @Content),
+            @ApiResponse(responseCode = "401",
+                    description = "No está autorizado",
+                    content = @Content),
     })
     @GetMapping("/categoria")
     public List<CategoriaResponse> getAllCategorias() {
@@ -109,6 +112,9 @@ public class CategoriaController {
             @ApiResponse(responseCode = "400",
                     description = "No existe la categoría que buscaba",
                     content = @Content),
+            @ApiResponse(responseCode = "401",
+                    description = "No está autorizado",
+                    content = @Content),
     })
     @GetMapping("/categoria/{id}")
     public CategoriaResponse getById(@PathVariable UUID id) {
@@ -135,6 +141,12 @@ public class CategoriaController {
                     content = @Content),
             @ApiResponse(responseCode = "400",
                     description = "No existe la categoría que buscaba",
+                    content = @Content),
+            @ApiResponse(responseCode = "401",
+                    description = "No está autorizado",
+                    content = @Content),
+            @ApiResponse(responseCode = "415",
+                    description = "Formato no permitido",
                     content = @Content),
     })
     @GetMapping("/categoria/image/{id}")
@@ -163,6 +175,12 @@ public class CategoriaController {
                                     """)) }),
             @ApiResponse(responseCode = "400",
                     description = "No se han introducido correctamente los datos de la categoría",
+                    content = @Content),
+            @ApiResponse(responseCode = "401",
+                    description = "No está autorizado",
+                    content = @Content),
+            @ApiResponse(responseCode = "403",
+                    description = "Acción prohibida para este user",
                     content = @Content),
     })
     @PostMapping("/admin/categoria")
@@ -196,6 +214,12 @@ public class CategoriaController {
             @ApiResponse(responseCode = "400",
                     description = "No se ha podido modificar la categoría",
                     content = @Content),
+            @ApiResponse(responseCode = "401",
+                    description = "No está autorizado",
+                    content = @Content),
+            @ApiResponse(responseCode = "403",
+                    description = "Acción prohibida para este user",
+                    content = @Content),
     })
     @PutMapping("/admin/categoria/{id}")
     public CategoriaResponse editCategoria(@PathVariable UUID id,
@@ -207,8 +231,14 @@ public class CategoriaController {
 
 
     @Operation(summary = "Este método elimina una categoría localizada por su id")
-    @ApiResponse(responseCode = "204", description = "Categoría borrada con éxito",
-            content = @Content)
+    @ApiResponses(value={@ApiResponse(responseCode = "204", description = "Categoría borrada con éxito",
+            content = @Content),
+            @ApiResponse(responseCode = "401",
+                    description = "No está autorizado",
+                    content = @Content),
+            @ApiResponse(responseCode = "403",
+                    description = "Acción prohibida para este user",
+                    content = @Content)})
     @Parameter(description = "El id de la categoría que se quiere eliminar", name = "id", required = true)
     @DeleteMapping("/admin/categoria/{id}")
     public ResponseEntity<?> deleteCategoria(@PathVariable UUID id) {

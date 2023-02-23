@@ -2,12 +2,14 @@ package com.solobajos.solobajos.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.solobajos.solobajos.model.User;
+import com.solobajos.solobajos.model.UserRole;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 
 
 @SuperBuilder
@@ -24,6 +26,8 @@ public class UserResponse {
     protected String avatar;
 
     protected Boolean enabled;
+
+    protected Set<UserRole> roles;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy HH:mm:ss")
     protected LocalDateTime createdAt;
 
@@ -33,10 +37,11 @@ public class UserResponse {
                 .id(user.getId().toString())
                 .fullName(user.getFullName())
                 .username(user.getUsername())
-                .avatar(user.getAvatar())
                 .email(user.getEmail())
-                .createdAt(user.getCreatedAt())
+                .avatar(user.getAvatar())
                 .enabled(user.isEnabled())
+                .roles(user.getRoles())
+                .createdAt(user.getCreatedAt())
                 .build();
     }
 

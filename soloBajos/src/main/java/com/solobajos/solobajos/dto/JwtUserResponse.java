@@ -24,6 +24,7 @@ public class JwtUserResponse extends UserResponse {
         avatar = userResponse.getAvatar();
         enabled = userResponse.getEnabled();
         createdAt = userResponse.getCreatedAt();
+        roles = userResponse.getRoles();
     }
 
     public static JwtUserResponse of (User user, String token) {
