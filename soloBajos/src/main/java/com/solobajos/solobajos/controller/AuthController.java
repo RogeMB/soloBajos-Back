@@ -9,7 +9,14 @@ import com.solobajos.solobajos.model.User;
 import com.solobajos.solobajos.security.jwt.JwtProvider;
 import com.solobajos.solobajos.service.UserService;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.info.Info;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -37,6 +44,27 @@ public class AuthController {
     private final AuthenticationManager authManager;
     private final JwtProvider jwtProvider;
 
+    @Operation(summary = "Este método crea un nuevo user")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201",
+                    description = "Se ha creado un nuevo user",
+                    content = { @Content(mediaType = "application/json",
+                            array = @ArraySchema(schema = @Schema(implementation = UserResponse.class)),
+                            examples = @ExampleObject(value = """
+                                    {
+                                        "id": "400d3b41-2a44-48a8-b31b-81309f05c502",
+                                        "username": "mariab",
+                                        "fullName": "María Barrera",
+                                        "email": "mariab@hotmail.com",
+                                        "avatar": "userDefault.png",
+                                        "enabled": true,
+                                        "createdAt": "23/02/2023 06:24:38"
+                                    }
+                                    """)) }),
+            @ApiResponse(responseCode = "400",
+                    description = "No se han introducido correctamente los datos del nuevo user",
+                    content = @Content),
+    })
     @PostMapping("/auth/register")
     public ResponseEntity<UserResponse> createUserWithUserRole(@Valid @RequestBody CreateUserDto createUserDto) {
         User user = userService.createUserWithUserRole(createUserDto);
@@ -49,7 +77,27 @@ public class AuthController {
         return ResponseEntity.created(createdURI).body(UserResponse.fromUser(user));
     }
 
-    @PostMapping("/admin/auth/register")
+    @Operation(summary = "Este método crea un nuevo admin")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201",
+                    description = "Se ha creado un nuevo admin",
+                    content = { @Content(mediaType = "application/json",
+                            array = @ArraySchema(schema = @Schema(implementation = UserResponse.class)),
+                            examples = @ExampleObject(value = """
+                                    {
+                                        "id": "400d3b41-2a44-48a8-b31b-81309f05c502",
+                                        "username": "mariab",
+                                        "fullName": "María Barrera",
+                                        "email": "mariab@hotmail.com",
+                                        "avatar": "userDefault.png",
+                                        "enabled": true,
+                                        "createdAt": "23/02/2023 06:24:38"
+                                    }
+                                    """)) }),
+            @ApiResponse(responseCode = "400",
+                    description = "No se han introducido correctamente los datos del nuevo admin",
+                    content = @Content),
+    })
     public ResponseEntity<UserResponse> createUserWithAdminRole(@Valid @RequestBody CreateUserDto createUserDto) {
         User user = userService.createUserWithAdminRole(createUserDto);
 
@@ -61,6 +109,28 @@ public class AuthController {
         return ResponseEntity.created(createdURI).body(UserResponse.fromUser(user));
     }
 
+    @Operation(summary = "Este método loguea a un usuario")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201",
+                    description = "Se ha logueado correctamente",
+                    content = { @Content(mediaType = "application/json",
+                            array = @ArraySchema(schema = @Schema(implementation = UserResponse.class)),
+                            examples = @ExampleObject(value = """
+                                    {
+                                        "id": "8c5eedfc-df65-4552-8b37-84507e432a5a",
+                                        "username": "javiermb",
+                                        "fullName": "Javier Mohigefer",
+                                        "email": "javier@gmail.com",
+                                        "avatar": "userDefault.png",
+                                        "enabled": true,
+                                        "createdAt": "17/02/2023 00:00:00",
+                                        "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI4YzVlZWRmYy1kZjY1LTQ1NTItOGIzNy04NDUwN2U0MzJhNWEiLCJpYXQiOjE2NzcxMzAwMzksImV4cCI6MTY3ODQyNjAzOX0.unGyQpM2nokVeD3byXmqrawe7Q09F4K-wpIBMmMOdzJOUJQQM9WW5rLJosRR2Gm7weYYQYjwnTYr4NoelMTJQw"
+                                    }
+                                    """)) }),
+            @ApiResponse(responseCode = "400",
+                    description = "No se han introducido correctamente los datos del usuario",
+                    content = @Content),
+    })
     @PostMapping("/auth/login")
     public ResponseEntity<JwtUserResponse> login(@Valid @RequestBody LoginRequest loginRequest) {
 

@@ -40,7 +40,7 @@ public class User implements UserDetails {
                     )
             }
     )
-    @Column(columnDefinition = "uuid")
+    @Column(columnDefinition = "uuid", updatable = false)
     private UUID id;
     @NaturalId
     @Column(unique = true, updatable = false)
