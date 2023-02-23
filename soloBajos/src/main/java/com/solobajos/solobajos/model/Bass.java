@@ -7,7 +7,7 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.format.annotation.DateTimeFormat;
-
+import org.hibernate.annotations.Parameter;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.time.Year;
@@ -25,19 +25,19 @@ import java.util.UUID;
 @EntityListeners(AuditingEntityListener.class)
 public class Bass {
 
-    @Id
+   @Id
     @GeneratedValue(generator = "UUID")
     @GenericGenerator(
             name = "UUID",
             strategy = "org.hibernate.id.UUIDGenerator",
             parameters = {
-                    @org.hibernate.annotations.Parameter(
+                    @Parameter(
                             name = "uuid_gen_strategy_class",
                             value = "org.hibernate.id.uuid.CustomVersionFourStrategy"
                     )
             }
     )
-    @Column(columnDefinition = "uuid")
+    @Column(columnDefinition = "uuid", updatable = false)
     private UUID id;
 
     private String brand;

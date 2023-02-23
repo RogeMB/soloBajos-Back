@@ -4,8 +4,7 @@ package com.solobajos.solobajos.model;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-import org.springframework.web.util.UriBuilder;
-
+import org.hibernate.annotations.Parameter;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,13 +26,13 @@ public class Categoria {
             name = "UUID",
             strategy = "org.hibernate.id.UUIDGenerator",
             parameters = {
-                    @org.hibernate.annotations.Parameter(
+                    @Parameter(
                             name = "uuid_gen_strategy_class",
                             value = "org.hibernate.id.uuid.CustomVersionFourStrategy"
                     )
             }
     )
-    @Column(columnDefinition = "uuid")
+    @Column(columnDefinition = "uuid", updatable = false)
     private UUID id;
 
     private String name;

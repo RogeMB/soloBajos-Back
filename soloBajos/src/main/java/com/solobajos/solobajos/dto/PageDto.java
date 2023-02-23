@@ -1,5 +1,6 @@
 package com.solobajos.solobajos.dto;
 
+import io.swagger.v3.oas.annotations.Parameter;
 import lombok.*;
 import org.springframework.data.domain.Page;
 
@@ -17,11 +18,14 @@ public class PageDto<T> {
     private int totalPages;
     private Long totalElements;
 
+    private int currentPage;
+
     public PageDto(Page<T> page){
         this.content = page.getContent();
         this.last = page.isLast();
         this.first = page.isFirst();
         this.totalPages = page.getTotalPages();
         this.totalElements = page.getTotalElements();
+        this.currentPage = page.getNumber();
     }
 }
