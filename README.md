@@ -108,12 +108,12 @@ Realiza un *git clone* de la siguiente dirección:
 *https://github.com/RogeMB/soloBajos-Back*
 
 ```console
-git clone https://github.com/RogeMB/Trianafy.git
+git https://github.com/RogeMB/soloBajos-Back.git
 ```
 
 Dirígete hasta la carpeta:
 
-> cd ./Trianafy/
+> cd ./soloBajos-Back/
 
 
 **Primero** tienes que tener instalado Apache Maven y sería recomendable tener alguna IDE, como **Intellij IDEA** o **VisualStudio Code**
