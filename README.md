@@ -118,9 +118,17 @@ Dirígete hasta la carpeta:
 
 **Primero** tienes que tener instalado Apache Maven y sería recomendable tener alguna IDE, como **Intellij IDEA** o **VisualStudio Code**
 
+**Rama de Prod:**
+Ejecuta el siguiente comando dentro de la ruta del proyecto donde se encuentre el docker-compose:
+    
+    docker-compose up -d
+
+
+**Rama de Prod:**
+
 Ejecuta el siguiente comando:
     
-    mvn complile
+    mvn compile
     
     
 Ejecuta el siguiente comando:
