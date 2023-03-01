@@ -1,0 +1,926 @@
+{
+	"info": {
+		"_postman_id": "993cb83d-f8cf-4f10-8ea7-be24e65b1050",
+		"name": "SoloBajos",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "23783500"
+	},
+	"item": [
+		{
+			"name": "User",
+			"item": [
+				{
+					"name": "Admin GET ALL USERS",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{api_base_url}}/admin/user",
+							"host": [
+								"{{api_base_url}}"
+							],
+							"path": [
+								"admin",
+								"user"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Admin GET ONE USER",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{api_base_url}}/admin/user/a520d2e5-16c1-44ce-a120-ed19c862d2bd",
+							"host": [
+								"{{api_base_url}}"
+							],
+							"path": [
+								"admin",
+								"user",
+								"a520d2e5-16c1-44ce-a120-ed19c862d2bd"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET PROFILE",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{api_base_url}}/user/profile",
+							"host": [
+								"{{api_base_url}}"
+							],
+							"path": [
+								"user",
+								"profile"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET FAVS",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{api_base_url}}/user/fav",
+							"host": [
+								"{{api_base_url}}"
+							],
+							"path": [
+								"user",
+								"fav"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET IMAGE USER",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{api_base_url}}/user/image",
+							"host": [
+								"{{api_base_url}}"
+							],
+							"path": [
+								"user",
+								"image"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "LoginAdmin",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var json = pm.response.json();\r",
+									"pm.collectionVariables.set(\"token\", json.token);\r",
+									"pm.collectionVariables.set(\"refresh_token\", json.refreshToken);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"rogemb\",\r\n    \"password\": \"Password1!\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{api_base_url}}/auth/login",
+							"host": [
+								"{{api_base_url}}"
+							],
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login normal",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var json = pm.response.json();\r",
+									"pm.collectionVariables.set(\"token\", json.token);\r",
+									"pm.collectionVariables.set(\"refresh_token\", json.refreshToken);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"javiermb\",\r\n    \"password\": \"Password1!\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{api_base_url}}/auth/login",
+							"host": [
+								"{{api_base_url}}"
+							],
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login3",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var json = pm.response.json();\r",
+									"pm.collectionVariables.set(\"token\", json.token);\r",
+									"pm.collectionVariables.set(\"refresh_token\", json.refreshToken);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{    \r\n    \"username\": \"mariab\",\r\n    \"password\": \"Maria1234!\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{api_base_url}}/auth/login",
+							"host": [
+								"{{api_base_url}}"
+							],
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST NEW USER",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"fullName\": \"María Barrera\",\n    \"username\": \"mariab\",\n    \"email\": \"mariab@hotmail.com\",\n    \"verifyEmail\": \"mariab@hotmail.com\",\n    \"password\": \"Maria1234!\",\n    \"verifyPassword\": \"Maria1234!\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{api_base_url}}/auth/register",
+							"host": [
+								"{{api_base_url}}"
+							],
+							"path": [
+								"auth",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST NEW ADMIN",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"fullName\": \"Rogee MohiGor\",\n    \"username\": \"RogeeMG\",\n    \"email\": \"roge3@hotmail.com\",\n    \"verifyEmail\": \"roge3@hotmail.com\",\n    \"password\": \"Roge1234!\",\n    \"verifyPassword\": \"Roge1234!\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{api_base_url}}/admin/auth/register",
+							"host": [
+								"{{api_base_url}}"
+							],
+							"path": [
+								"admin",
+								"auth",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PUT CHANGE PASSW 1",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var json = pm.response.json();\r",
+									"pm.collectionVariables.set(\"token\", json.token);\r",
+									"pm.collectionVariables.set(\"refresh_token\", json.refreshToken);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"oldPassword\": \"Password1!\",\r\n    \"newPassword\": \"NuevaContra!1\",\r\n    \"verifyNewPassword\": \"NuevaContra!1\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{api_base_url}}/user/changepassword",
+							"host": [
+								"{{api_base_url}}"
+							],
+							"path": [
+								"user",
+								"changepassword"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PUT CHANGE PASSW 2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var json = pm.response.json();\r",
+									"pm.collectionVariables.set(\"token\", json.token);\r",
+									"pm.collectionVariables.set(\"refresh_token\", json.refreshToken);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"oldPassword\": \"NuevaContra!1\",\r\n    \"newPassword\": \"Maria1234!\",\r\n    \"verifyNewPassword\": \"Maria1234!\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{api_base_url}}/user/changepassword",
+							"host": [
+								"{{api_base_url}}"
+							],
+							"path": [
+								"user",
+								"changepassword"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "EDIT USER",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "file",
+									"type": "file",
+									"src": "/C:/Users/Roge/Downloads/userDefault2.png"
+								},
+								{
+									"key": "editUserDto",
+									"value": "{\n    \"fullName\": \"Rogelio Mohigefer Barrera\"\n}",
+									"contentType": "application/vnd.api+json",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{api_base_url}}/user/edit",
+							"host": [
+								"{{api_base_url}}"
+							],
+							"path": [
+								"user",
+								"edit"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DELETE USER",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{api_base_url}}/admin/user/8c5eedfc-df65-4552-8b37-84507e432a5a",
+							"host": [
+								"{{api_base_url}}"
+							],
+							"path": [
+								"admin",
+								"user",
+								"8c5eedfc-df65-4552-8b37-84507e432a5a"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DELETE MY ACCOUNT",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{api_base_url}}/user/deletemyaccount",
+							"host": [
+								"{{api_base_url}}"
+							],
+							"path": [
+								"user",
+								"deletemyaccount"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DELETE BANN ACCOUNT",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"enabled\": false\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{api_base_url}}/admin/bann/8c5eedfc-df65-4552-8b37-84507e432a5a",
+							"host": [
+								"{{api_base_url}}"
+							],
+							"path": [
+								"admin",
+								"bann",
+								"8c5eedfc-df65-4552-8b37-84507e432a5a"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "{{token}}",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Bass",
+			"item": [
+				{
+					"name": "GET ALL",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{api_base_url}}/bass",
+							"host": [
+								"{{api_base_url}}"
+							],
+							"path": [
+								"bass"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET ONE",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{api_base_url}}/bass/7ce17b0b-3266-4434-acc5-d3061447be32",
+							"host": [
+								"{{api_base_url}}"
+							],
+							"path": [
+								"bass",
+								"7ce17b0b-3266-4434-acc5-d3061447be32"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET IMAGE BASS",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{api_base_url}}/bass/image/7ce17b0b-3266-4434-acc5-d3061447be32",
+							"host": [
+								"{{api_base_url}}"
+							],
+							"path": [
+								"bass",
+								"image",
+								"7ce17b0b-3266-4434-acc5-d3061447be32"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST BASS",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n      \"brand\": \"Musicman\",\r\n      \"model\": \"Bongo\",\r\n      \"frets\": \"24\",\r\n      \"origin\": \"EEUU\",\r\n      \"builtYear\": \"2022\",\r\n      \"price\": \"2400.00\",\r\n      \"discount\": \"0.0\",\r\n      \"isAvailable\": true,\r\n      \"state\": \"NEW\",\r\n      \"categoria_id\": \"746388fe-83eb-43f1-8851-9cab3008c0f2\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{api_base_url}}/admin/bass",
+							"host": [
+								"{{api_base_url}}"
+							],
+							"path": [
+								"admin",
+								"bass"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST FAV",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{api_base_url}}/bass/fav/7ce17b0b-3266-4434-acc5-d3061447be32",
+							"host": [
+								"{{api_base_url}}"
+							],
+							"path": [
+								"bass",
+								"fav",
+								"7ce17b0b-3266-4434-acc5-d3061447be32"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PUT BASS",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "file",
+									"type": "file",
+									"src": "/C:/Users/Roge/Downloads/stringray1 (2).png"
+								},
+								{
+									"key": "editBassDto",
+									"value": "  {\n      \"brand\": \"Musicman\",\n      \"model\": \"Stingray\",\n      \"frets\": \"21\",\n      \"origin\": \"EEUU\",\n      \"builtYear\": \"2022\",\n      \"price\": \"1900.00\",\n      \"discount\": \"0.0\",\n      \"isAvailable\": true,\n      \"state\": \"NEW\",\n      \"categoria_id\": \"746388fe-83eb-43f1-8851-9cab3008c0f2\"\n}",
+									"contentType": "application/vnd.api+json",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{api_base_url}}/admin/bass/7ce17b0b-3266-4434-acc5-d3061447be32",
+							"host": [
+								"{{api_base_url}}"
+							],
+							"path": [
+								"admin",
+								"bass",
+								"7ce17b0b-3266-4434-acc5-d3061447be32"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DELETE BASS",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{api_base_url}}/admin/bass/7ce17b0b-3266-4434-acc5-d3061447be32",
+							"host": [
+								"{{api_base_url}}"
+							],
+							"path": [
+								"admin",
+								"bass",
+								"7ce17b0b-3266-4434-acc5-d3061447be32"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "{{token}}",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Categoria",
+			"item": [
+				{
+					"name": "GET ALL",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{api_base_url}}/categoria",
+							"host": [
+								"{{api_base_url}}"
+							],
+							"path": [
+								"categoria"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET ONE",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{api_base_url}}/categoria/746388fe-83eb-43f1-8851-9cab3008c0f2",
+							"host": [
+								"{{api_base_url}}"
+							],
+							"path": [
+								"categoria",
+								"746388fe-83eb-43f1-8851-9cab3008c0f2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET IMAGE CATEGORIA",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{api_base_url}}/categoria/image/746388fe-83eb-43f1-8851-9cab3008c0f2",
+							"host": [
+								"{{api_base_url}}"
+							],
+							"path": [
+								"categoria",
+								"image",
+								"746388fe-83eb-43f1-8851-9cab3008c0f2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST CATEGORIA",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Bajos heavys\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{api_base_url}}/admin/categoria",
+							"host": [
+								"{{api_base_url}}"
+							],
+							"path": [
+								"admin",
+								"categoria"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PUT CATEGORIA",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "file",
+									"type": "file",
+									"src": "/C:/Users/Roge/Downloads/categoriaDefault2.png"
+								},
+								{
+									"key": "editCategoriaDto",
+									"value": "{\n    \"name\": \"Bajos Precision\"\n}",
+									"contentType": "application/vnd.api+json",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{api_base_url}}/admin/categoria/746388fe-83eb-43f1-8851-9cab3008c0f2",
+							"host": [
+								"{{api_base_url}}"
+							],
+							"path": [
+								"admin",
+								"categoria",
+								"746388fe-83eb-43f1-8851-9cab3008c0f2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DELETE CATEGORIA",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{api_base_url}}/admin/categoria/746388fe-83eb-43f1-8851-9cab3008c0f2",
+							"host": [
+								"{{api_base_url}}"
+							],
+							"path": [
+								"admin",
+								"categoria",
+								"746388fe-83eb-43f1-8851-9cab3008c0f2"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "{{token}}",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "api_base_url",
+			"value": "http://localhost:8080",
+			"type": "string"
+		},
+		{
+			"key": "refresh_token",
+			"value": ""
+		},
+		{
+			"key": "token",
+			"value": ""
+		}
+	]
+}
